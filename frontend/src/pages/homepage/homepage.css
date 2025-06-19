@@ -3,75 +3,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Figtree&display=swap');
 
-@media (max-width: 1024px) {
-  .main-text {
-    font-size: 4.5rem;
-  }
-
-  .descript-text {
-    font-size: 1.6rem;
-  }
-
-  .images {
-    gap: 30px;
-    margin-left: 60px;
-  }
-
-  .text-on-left {
-    margin-left: 60px;
-  }
-
-  .second-navbar {
-    gap: 40px;
-    flex-wrap: wrap;
-  }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-    .home-part {
-    height: auto; /* Let height fit content if needed */
-    padding-top: 30%;
-  }
-  .text-on-left {
-    margin: 0;
-    text-align: center;
-    align-self: center;
-  }
-
-  .top-text {
-    font-size: 1rem;
-  }
-  .main-text {
-    font-size: 2rem;
-  }
-
-  .descript-text {
-    font-size: 1.5rem;
-  }
-
-  .bridgeImg {
-    display: none;
-}
-
-.greenImg {
-    display: none;
-}
-
-.townImg {
-    display: none;
-}
-
-
-  .second-navbar a {
-    font-size: 18px;
-    padding: 8px;
-  }
-}
 
 body {
     background-image:  url('../../assets/home-img/homescreen.png');
     margin: 0;
+    overflow-x: hidden;
 }
 
 .homepage-wrapper {
@@ -116,7 +52,8 @@ body {
     align-content: center;
     margin-top: -50px;
     justify-content: center;
-    padding-left: 10%;
+    padding-left: clamp(15%, 210%);
+    margin-left: 5%;
 
 }
 
@@ -182,8 +119,8 @@ body {
     text-align: center;
     font-family: 'Figtree', serif;
     font-size: clamp(1.5rem, 2vw, 1.8rem);
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 10%;
+    margin-right: 10%
 }
 
 .top-row {
@@ -194,13 +131,13 @@ body {
 
 .box-pink {
     background-color: #DBC9DC;
-    width: 9.2rem;
-    height: 8.5rem;
+    width: clamp(7.5rem, 10vw, 10rem);
+    height: clamp(7.5rem, 10vw, 10rem);
     border-radius: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 1rem;
+    margin: clamp(0.5rem, 1vw, 1rem);
     box-shadow: 2px 3px 4px rgb(170, 157, 170);
 }
 
@@ -236,13 +173,13 @@ body {
 
 .box-green {
     background-color: #D9EEC3;
-    width: 9.2rem;
-    height: 8.5rem;
+    width: clamp(7.5rem, 10vw, 10rem);
+    height: clamp(7.5rem, 10vw, 10rem);
     border-radius: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 1rem;
+    margin: clamp(0.5rem, 1vw, 1rem);
     box-shadow: 2px 3px 4px rgb(156, 181, 128);
 }
 
@@ -284,16 +221,18 @@ body {
 }
 
 .all-boxes p {
-    width: 175px;
+    width: clamp(120px, 15vw, 200px);
     text-align: center;
     font-family: 'Figtree', serif;
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    justify-self: center;
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
 }
 
 .all-boxes h3 {
     font-family: 'Fira Sans Condensed', serif;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
     justify-self: center;
+    margin-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 .plan-w-confidence .travel-smarter-together {
@@ -303,7 +242,7 @@ body {
 .all-boxes {
     display: flex;
     justify-content: center;
-    gap: 120px;
+    gap: 90px;
 
 }
 
@@ -313,4 +252,94 @@ body {
     font-weight: 800;
     font-size: clamp(4rem, 6vw, 5.5rem);
     padding-top: 12%;
+}
+
+@media (max-width: 1024px) {
+
+  .main-text {
+    font-size: 4.5rem;
+  }
+
+  .descript-text {
+    font-size: 1.6rem;
+  }
+
+  .images {
+    gap: 30px;
+    margin-left: 60px;
+  }
+
+  .text-on-left {
+    margin-left: 60px;
+  }
+
+  .second-navbar {
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .about-descript {
+    margin: 0 auto;
+    padding: 0 5%;
+    max-width: 80%;
+    }
+
+    .all-boxes {
+        justify-content: center;
+        gap: 20px;
+
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .home-part {
+        height: auto;
+        padding-top: 10%;
+    }
+
+    .text-on-left {
+        margin: 0 130 0 100px;
+        text-align: center;
+        
+    }
+
+    .top-text {
+        font-size: 1.4rem;
+    }
+
+    .main-text {
+        font-size: 5rem;
+    }
+
+    .descript-text {
+        font-size: 1.6rem;
+    }
+
+    .bridgeImg {
+        display: none;
+    }
+
+    .greenImg {
+        display: none;
+    }
+
+    .townImg {
+        display: none;
+    }
+    .second-navbar a {
+        font-size: 18px;
+        padding: 8px;
+    }
+    .about-descript {
+        margin: 0 auto;
+        padding: 0 5%;
+        max-width: 36%;
+    }
+
+    .all-boxes {
+        display: grid;
+        justify-content: center;
+        gap: 0;
+    }
 }

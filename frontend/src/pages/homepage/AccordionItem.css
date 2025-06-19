@@ -171,3 +171,17 @@ textarea {
     font-family: 'Figtree', serif;
     font-size: 18px;
 }
+
+@media (max-width: 1024px) {
+
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .all-faq-stuff {
+    display: grid;
+    gap: 6%;
+    justify-content: center;
+    margin-bottom: 20%;
+}
+}
