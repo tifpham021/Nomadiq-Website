@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree&display=swap');
+
+@media (max-width: 1024px) {
+  .main-text {
+    font-size: 4.5rem;
+  }
+
+  .descript-text {
+    font-size: 1.6rem;
+  }
+
+  .images {
+    gap: 30px;
+    margin-left: 60px;
+  }
+
+  .text-on-left {
+    margin-left: 60px;
+  }
+
+  .second-navbar {
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .home-part {
+    height: auto; /* Let height fit content if needed */
+    padding-top: 30%;
+  }
+  .text-on-left {
+    margin: 0;
+    text-align: center;
+    align-self: center;
+  }
+
+  .top-text {
+    font-size: 1rem;
+  }
+  .main-text {
+    font-size: 2rem;
+  }
+
+  .descript-text {
+    font-size: 1.5rem;
+  }
+
+  .bridgeImg {
+    display: none;
+}
+
+.greenImg {
+    display: none;
+}
+
+.townImg {
+    display: none;
+}
+
+
+  .second-navbar a {
+    font-size: 18px;
+    padding: 8px;
+  }
+}
+
+body {
+    background-image:  url('../../assets/home-img/homescreen.png');
+    margin: 0;
+}
+
+.homepage-wrapper {
+  padding-top: 90px;
+}
+
+.second-navbar {
+  display: flex;
+  justify-content: center;
+  gap: 85px;
+}
+
+.second-navbar a {
+    color: black;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: clamp(0.5rem, 30vw, 1.3rem);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.second-navbar a:hover {
+    background-color: #C7DEE7;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.second-navbar a:active {
+    background-color: #A4CDDE;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.home-part {
+    display: flex;
+    margin-top: 40px;
+    justify-content: center;
+}
+
+.text-on-left {
+    align-content: center;
+    margin-top: -50px;
+    justify-content: center;
+    padding-left: 10%;
+
+}
+
+.top-text {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    justify-self: center ;
+    font-family: 'Alegreya SC', serif;
+    font-weight: 800;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-text {
+    font-size: clamp(5rem, 10vw, 7rem);
+    margin: 0 0 2rem 0;
+    font-family: 'Alegreya SC', serif;
+    font-weight: 800;
+}
+
+.descript-text {
+    font-family: "Fira Sans Condensed", serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    justify-self: center ;
+    text-align: center;
+}
+
+.stacked-img {
+    display: grid;
+}
+
+.images {
+    display: inline-flex;
+    gap: clamp(10px, 10vw, 50px);
+    margin-left: 10%;
+    margin-right: 5%;
+}
+
+.bridgeImg {
+    width: clamp(150px, 30vw, 240px);
+    height: auto;
+}
+
+.greenImg {
+    width: clamp(180px, 30vw, 330px);
+    height: auto;
+}
+
+.townImg {
+    width: clamp(180px, 30vw, 320px);
+    height: auto;
+}
+
+.about-header {
+    justify-self: center;
+    font-family: 'Alegreya SC', serif;
+    font-weight: 800;
+    font-size: clamp(4rem, 6vw, 5.5rem);
+    padding-top: 12%;
+}
+
+.about-descript {
+    justify-self: center;
+    text-align: center;
+    font-family: 'Figtree', serif;
+    font-size: clamp(1.5rem, 2vw, 1.8rem);
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.top-row {
+    display: flex;
+    gap: 1.4rem;
+    margin-top: 1.5rem;
+}
+
+.box-pink {
+    background-color: #DBC9DC;
+    width: 9.2rem;
+    height: 8.5rem;
+    border-radius: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    box-shadow: 2px 3px 4px rgb(170, 157, 170);
+}
+
+.img-one-pink {
+    height: 4.5rem;
+    align-self: center;
+}
+
+.img-two-pink {
+    height: 4.7rem;
+    align-self: center;
+}
+
+.img-three-pink {
+    height: 5.5rem;
+    align-self: center;
+}
+
+.img-four-pink {
+    height: 4.5rem;
+    align-self: center;
+}
+
+.img-five-pink {
+    height: 5.5rem;
+    align-self: center;
+}
+
+.img-six-pink {
+    height: 4.2rem;
+    align-self: center;
+}
+
+.box-green {
+    background-color: #D9EEC3;
+    width: 9.2rem;
+    height: 8.5rem;
+    border-radius: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    box-shadow: 2px 3px 4px rgb(156, 181, 128);
+}
+
+.img-one-green {
+    height: 4.4rem;
+    align-self: center;
+}
+
+.img-two-green {
+    height: 5.4rem;
+    width: 6.5rem;
+    align-self: center;
+}
+
+.img-three-green {
+    height: 5.2rem;
+    align-self: center;
+}
+
+.img-four-green {
+    height: 5.5rem;
+    align-self: center;
+}
+
+.img-five-green {
+    height: 5.4rem;
+    align-self: center;
+    margin-top: 1rem;
+}
+
+.img-six-green {
+    height: 5.2rem;
+    align-self: center;
+}
+
+.bottom-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.all-boxes p {
+    width: 175px;
+    text-align: center;
+    font-family: 'Figtree', serif;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+.all-boxes h3 {
+    font-family: 'Fira Sans Condensed', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    justify-self: center;
+}
+
+.plan-w-confidence .travel-smarter-together {
+    display: grid;
+}
+
+.all-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 120px;
+
+}
+
+.faqs-header {
+    justify-self: center;
+    font-family: 'Alegreya SC', serif;
+    font-weight: 800;
+    font-size: clamp(4rem, 6vw, 5.5rem);
+    padding-top: 12%;
+}

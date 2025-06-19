@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree&display=swap');
+
+.faq-box {
+  color: black;
+  width: 590px;
+  margin: 10px;
+}
+
+h1 {
+  justify-self: center;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.faq-question {
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'PT Sans', 'serif';
+  padding: 0 18px;
+}
+
+.faq-question.no-bottom-radius {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+}
+
+.plusIcon {
+  height: 30px;
+  width: 30px;
+  align-self: center;
+  box-shadow: 2px 2px 2px rgb(128, 127, 127);
+  border-radius: 60%;
+  cursor: pointer;
+}
+
+.plusIcon:hover {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 2px rgb(92, 92, 92);
+}
+
+.plusIcon:active {
+  box-shadow: 2px 3px 4px rgb(128, 127, 127);
+    transform: scale(0.98);
+}
+
+.minusIcon {
+  height: 30px;
+  width: 30px;
+  align-self: center;
+  box-shadow: 2px 2px 2px rgb(128, 127, 127);
+  border-radius: 60%;
+  cursor: pointer;
+}
+
+.minusIcon:hover {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 2px rgb(92, 92, 92);
+}
+
+.minusIcon:active {
+  box-shadow: 2px 3px 4px rgb(128, 127, 127);
+    transform: scale(0.98);
+}
+
+.answer {
+  font-size: 18px;
+  margin-top: -10px;
+  background-color: #f9f9f9;
+  border-radius: 0 0 20px 20px;
+  line-height: 1.4;
+  padding: 18px;
+  font-family: 'Figtree', serif;
+}
+
+.answer-wrapper {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in;
+  max-height: 0;
+  opacity: 0;
+}
+
+.answer-wrapper.open {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.in-pink-box {
+    background-color: #E1C1C6;
+    border-radius: 50px;
+    width: 500px;
+    height: 365px;
+    justify-items: center;
+    align-content: center;
+    margin-top: 20px;
+}
+
+.faq-content {
+    display: flex;
+    gap: 100px;
+    font-family: "PT Sans",serif;
+    font-weight: bolder;
+    justify-content: center;
+    margin: 5.5rem auto;
+}
+
+.submit-button {
+    box-shadow: 2px 3px 4px rgb(97, 31, 37);
+}
+
+.submit-button:hover {
+    box-shadow: 4px 4px 5px rgb(97, 20, 28);
+    transform: translateY(2px);
+}
+
+.submit-button:active {
+    box-shadow: 2px 2px 10px rgb(97, 31, 37);
+    transform: scale(0.98);
+}
+
+.all-faq-stuff {
+    display: flex;
+    gap: 6%;
+    justify-content: center;
+    margin-bottom: 6%;
+}
+
+.faq-submission {
+    font-family: 'PT Sans', serif;
+    font-weight: 700;
+    margin-top: -5%;
+}
+
+.faq-submission h2{
+    font-size: 25px;
+    justify-self: center;
+}
+
+.faq-submission p{
+    font-size: 23px;
+    width: 340px;
+    text-align: center;
+}
+
+button {
+    background-color: #dc7b8a;
+    font-family: 'PT Sans', serif;
+    font-weight: 700;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 20px ;
+    margin-top: 15px;
+}
+
+textarea {
+    height: 150px;
+    width: 380px;
+    border-radius: 20px;
+    border: none;
+    padding: 10px 18px;
+    font-family: 'Figtree', serif;
+    font-size: 18px;
+}
