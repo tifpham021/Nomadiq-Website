@@ -6,26 +6,26 @@ body {
     margin:0;
 }
 
-.login-page {
+.signup-page {
     overflow-y: hidden;
 }
 
-.login-page-content {
+.signup-page-content {
     padding-top: 4% ;
     display: flex;
 }
- .login-left {
+ .signup-left {
     width: 50%;             
     height: 100vh;          
     display: flex;
     flex-direction: column; 
     align-items: center;
-    padding-top: 7%;
+    padding-top: 3%;
+
  }
 
- .login-username, .login-password {
+ .username, .password {
     display: flex;
-    margin: 40px 20px 20px 20px;
  }
 
 .bigUser {
@@ -34,34 +34,48 @@ body {
     width: 160px;
 }
 
-.login-username img {
+.username img {
     background-color: #AAD8E9;
     padding: 15px;
     border-radius: 30px;
     height: 50px;
 }
 
-.login-password img {
-    background-color: #AAD8E9;
+.password img {
+    background-color: #76AFE4;
     padding: 15px;
     border-radius: 30px;
     height: 50px;
 }
 
-.forgot-pass {
-    color: #2E51FF;
-    font-style: italic;
-    font-family: 'Inter', serif;
+input {
+    border: none;
+    border-radius: 30px;
+    padding: 20px;
+    width: 470px;
+    height: 35px;
     font-size: 18px;
-    text-decoration: none;
-    cursor: pointer;
-    justify-content: flex-end;
-    margin-left: auto;
-    margin-right: 12%;
-    margin-top: -2%;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 500;
+    background-color: #c8e4f2;
 }
 
-.login-btn {
+.top-inputs,
+.bottom-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: 36px 0px;
+}
+
+
+.signup-btn {
     color: white;
     background-color: #39535D;
     padding: 15px 22px;
@@ -73,27 +87,18 @@ body {
 
 }
 
-.login-btn:hover {
+.signup-btn:hover {
     box-shadow: 2px 3px 4px #132f3a;
     transform: translateY(2px);
 }
 
-.login-btn:active {
+.signup-btn:active {
     box-shadow: 2px 3px 4px #09181e;
     transform: scale(0.98);
 }
 
-.sign-up-other {
-    font-family: 'Inter', serif;
-    font-size: 19px;
-    margin-top: 12%;
-}
 
-.signup {
-    color: #2E51FF;
-    cursor: pointer;
-    text-decoration: none;
-}
+
 
 .right-shaded-box {
     margin-top: 0%;
@@ -103,7 +108,7 @@ body {
     margin-left: auto; 
 }
 
-.images-login {
+.images-signup {
     position: relative;       
     display: flex;
     justify-content: right;  
@@ -135,3 +140,4 @@ body {
     flex-direction: column;
     gap: 30px;
 }
+

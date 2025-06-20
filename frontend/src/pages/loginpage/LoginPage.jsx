@@ -23,19 +23,19 @@ const LoginPage = () => {
             <div className="login-page-content">
                 <div className='login-left'>
                     <img src={bigUser} className='bigUser'/>
-                    <div className='inputs'>
-                        <div className='username'>
+                    <div className='login-inputs'>
+                        <div className='login-username'>
                             <img src={userIcon}/>
                             <input type="text" placeholder='Enter your username...'/>
                         </div>
-                        <div className='password'>
+                        <div className='login-password'>
                             <img src={lock}/>
                             <input type="password" placeholder='Enter your password...'/>
                         </div>
                     </div>
-                    <a href="/forgot-pass" className='forgot-pass'>Forgot Password?</a>
+                    <a href="/resetting-pass-email" className='forgot-pass'>Forgot Password?</a>
                     <a href="/logged-in-home-page"><button className='login-btn'>LOGIN</button></a>
-                    <h1 className='sign-up-other'>Not a user yet? <span className='signup'>Sign up</span></h1>
+                    <h1 className='sign-up-other'>Not a user yet? <a href='/signup' className='signup'>Sign up</a></h1>
                 </div>
                 <div className="right-shaded-box">
                     <div className='images-login'>
