@@ -3,13 +3,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@700&display=swap');
 
 body {
-    overflow: hidden;
+    margin:0;
+}
+
+.login-page {
+    overflow-y: hidden;
 }
 
 .login-page-content {
     padding-top: 4% ;
     display: flex;
-
 }
  .login-left {
     width: 50%;             
@@ -67,20 +70,25 @@ input {
     color: #2E51FF;
     font-style: italic;
     font-family: 'Inter', serif;
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: none;
     cursor: pointer;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: 12%;
+    margin-top: -2%;
 }
 
 .login-btn {
     color: white;
     background-color: #39535D;
-    padding: 12px 20px;
+    padding: 15px 22px;
     border-radius: 30px;
     font-size: 21px;
     font-family: 'Noto Sans Georgian', serif;
     cursor: pointer;
     box-shadow: 1px 1px 2px #0f232b;
+
 }
 
 .login-btn:hover {
@@ -96,6 +104,7 @@ input {
 .sign-up-other {
     font-family: 'Inter', serif;
     font-size: 21px;
+    margin-top: 12%;
 }
 
 .signup {
@@ -104,8 +113,42 @@ input {
 }
 
 .right-shaded-box {
+    margin-top: 0%;
     background-color: #8eadc060;
     width: 50%;
     height: 100%;
     margin-left: auto; 
+}
+
+.images-login {
+    position: relative;       
+    display: flex;
+    justify-content: right;  
+    align-items: right;
+    margin-right: 15%;
+}
+
+.oxford {
+    height: 380px;
+    position: absolute;
+    top: 50%;                 /* Center vertically */
+    left: 50%;                /* Center horizontally */
+    transform: translate(-85%, -50%);  /* Perfect centering */
+    height: 350px;
+}
+
+.bigben {
+    margin-top: 15%;
+    height: 360px;
+}
+
+.tree {
+    height: 340px;
+    margin-bottom: 35%;
+}
+
+.stacked-img {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }

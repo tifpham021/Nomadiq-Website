@@ -38,9 +38,13 @@ const LoginPage = () => {
                     <h1 className='sign-up-other'>Not a user yet? <span className='signup'>Sign up</span></h1>
                 </div>
                 <div className="right-shaded-box">
-                    <img src={oxford}/>
-                    <img src={bigben}/>
-                    <img src={tree}/>
+                    <div className='images-login'>
+                        <img src={oxford} className='oxford'/>
+                        <div className='stacked-img'>
+                            <img src={bigben} className='bigben'/>
+                            <img src={tree} className='tree'/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
