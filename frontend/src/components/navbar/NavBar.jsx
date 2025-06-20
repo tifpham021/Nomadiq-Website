@@ -15,7 +15,7 @@ const Navbar = () => {
       </div>
       
       <div className={`right ${menuOpen ? 'open' : ''}`}>
-        <a href = "#">Login</a>
+        <a href = "/login">Login</a>
         <a href = "#">Sign Up</a>
       </div>
   

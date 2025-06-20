@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@700&display=swap');
+
+body {
+    overflow: hidden;
+}
+
+.login-page-content {
+    padding-top: 4% ;
+    display: flex;
+
+}
+ .login-left {
+    width: 50%;             
+    height: 100vh;          
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    padding-top: 7%;
+ }
+
+ .username {
+    display: flex;
+    margin: 40px 20px 20px 20px;
+    
+ }
+
+ .password {
+    display: flex;
+    margin: 40px 20px 20px 20px;
+ }
+
+.bigUser {
+    display: flex;
+    justify-self: center;
+    width: 160px;
+}
+
+.username img {
+    background-color: #AAD8E9;
+    padding: 15px;
+    border-radius: 30px;
+    height: 50px;
+}
+
+.password img {
+    background-color: #AAD8E9;
+    padding: 15px;
+    border-radius: 30px;
+    height: 50px;
+}
+
+input {
+    border: none;
+    border-radius: 30px;
+    padding: 20px;
+    width: 470px;
+    height: 35px;
+    font-size: 18px;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 700;
+    background-color: #c8e4f2;
+}
+
+.forgot-pass {
+    color: #2E51FF;
+    font-style: italic;
+    font-family: 'Inter', serif;
+    font-size: 20px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.login-btn {
+    color: white;
+    background-color: #39535D;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 21px;
+    font-family: 'Noto Sans Georgian', serif;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #0f232b;
+}
+
+.login-btn:hover {
+    box-shadow: 2px 3px 4px #132f3a;
+    transform: translateY(2px);
+}
+
+.login-btn:active {
+    box-shadow: 2px 3px 4px #09181e;
+    transform: scale(0.98);
+}
+
+.sign-up-other {
+    font-family: 'Inter', serif;
+    font-size: 21px;
+}
+
+.signup {
+    color: #2E51FF;
+    cursor: pointer;
+}
+
+.right-shaded-box {
+    background-color: #8eadc060;
+    width: 50%;
+    height: 100%;
+    margin-left: auto; 
+}
