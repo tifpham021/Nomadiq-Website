@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../homepage/AccordionItem.css';
 import plusIcon from '../../assets/home-img/hp-plus.png';
 import minusIcon from '../../assets/home-img/hp-minus.png';
+import {useSubmitFAQ} from '../../faqs/faq-linking.js';
+
 
 function AccordionItem({question, answer}) {
     const[isOpen, setIsOpen] = useState(false);
@@ -21,6 +23,28 @@ function AccordionItem({question, answer}) {
 }
 
 export default function FAQ() {
+    const [inputQuestion, setInputQuestion] = useState('');
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
+    const createQuestion = useSubmitFAQ(state => state.createQuestion);
+
+
+    const handleSubmit= async (e) => {
+        e.preventDefault();
+
+        if (!inputQuestion.trim()) {
+    setFeedback({ message: "Please type in a message before submitting", type: "error" });
+    return;
+  }
+
+  const { success, message } = await createQuestion({ question: inputQuestion });
+
+  if (success) {
+    setFeedback({ message, type: "success" });
+    setInputQuestion("");
+  } else {
+    setFeedback({ message, type: "error" });
+  }
+};
     return (
         <div className='all-faq-stuff'>
             <div className='faq-questions'>
@@ -41,12 +65,14 @@ export default function FAQ() {
                 <h2>Don't See Your Question?</h2>
                 <div className='in-pink-box'>
                     <p>Send it to us and we'll get back to you shortly!</p>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <textarea name="question"
-                               placeholder="Type your question here...">
+                               placeholder="Type your question here..."
+                               value={inputQuestion}
+                               onChange={(e) => setInputQuestion(e.target.value)}>
                         </textarea><br/>
-                    </form>
-                    <button className="submit-button">Submit</button>
+                    <button type="submit" className="submit-button">Submit</button>
+                     </form>
                 </div>
             </div>
         </div>

@@ -254,6 +254,10 @@ body {
     padding-top: 12%;
 }
 
+.faqs-section {
+    padding-bottom: 2%;
+}
+
 @media (max-width: 1024px) {
 
   .main-text {

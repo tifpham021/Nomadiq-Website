@@ -7,8 +7,44 @@ import bigben from '../../assets/login-img/big-ben.png';
 import tree from '../../assets/login-img/tree.png';
 import mail from '../../assets/login-img/mail.png';
 import background from '../../assets/login-img/loginscreen.png';
+import React, { useState } from 'react';
+import { useCreateUser } from "./signup-linking.js";
 
 const SignUpPage = () => {
+    const [inputUsername, setUsername] = useState('');
+    const [inputEmail, setEmail] = useState('');
+    const [inputPassword, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const createUser = useCreateUser(state => state.createUser);
+    
+    
+        const handleSubmit= async (e) => {
+            e.preventDefault();
+    
+        if (!inputUsername.trim() || !inputEmail.trim() || !inputPassword.trim()) {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        if (inputPassword !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+    
+      const { success, message } = await createUser({
+        username: inputUsername,
+        email: inputEmail,
+        password: inputPassword,
+        confirmpass: confirmPassword,
+    });
+    
+      if (success) {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+      }
+    }
     return (
         <div
                     className="login-page"
@@ -23,30 +59,40 @@ const SignUpPage = () => {
                     <div className="signup-page-content">
                         <div className='signup-left'>
                             <img src={bigUser} className='bigUser'/>
-                            <div className='inputs'>
-                                <div className='top-inputs'>
-                                    <div className='username'>
-                                        <img src={userIcon}/>
-                                        <input type="text" placeholder='Enter your username...'/>
+                            <form onSubmit={handleSubmit}>
+                                <div className='inputs'>
+                                    <div className='top-inputs'>
+                                        <div className='username'>
+                                            <img src={userIcon}/>
+                                            <input type="text" placeholder='Enter your username...'
+                                            value={inputUsername}
+                                            onChange={(e) => setUsername(e.target.value)}/>
+                                        </div>
+                                        <div className='username'>
+                                            <img src={mail}/>
+                                            <input type="text" placeholder='Enter your email...'
+                                            value={inputEmail}
+                                            onChange={(e) => setEmail(e.target.value)}/>
+                                        </div>
                                     </div>
-                                    <div className='username'>
-                                        <img src={mail}/>
-                                        <input type="text" placeholder='Enter your email...'/>
+                                    <div className='bottom-inputs'>
+                                        <div className='password'>
+                                            <img src={lock}/>
+                                            <input type="password" placeholder='Enter your password...'
+                                            value={inputPassword}
+                                            onChange={(e) => setPassword(e.target.value)}/>
+                                        </div>
+                                        <div className='password'>
+                                            <img src={lock}/>
+                                            <input type="password" placeholder='Confirm your password...'
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='bottom-inputs'>
-                                    <div className='password'>
-                                        <img src={lock}/>
-                                        <input type="password" placeholder='Enter your password...'/>
-                                    </div>
-                                    <div className='password'>
-                                        <img src={lock}/>
-                                        <input type="password" placeholder='Confirm your password...'/>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="/login"><button className='signup-btn'>SIGN UP</button></a>
-                        
+                                
+                                <button className='signup-btn' type='submit'>SIGN UP</button>
+                            </form>
                         </div>
                         <div className="right-shaded-box">
                             <div className='images-signup'>
