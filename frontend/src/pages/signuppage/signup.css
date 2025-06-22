@@ -141,3 +141,13 @@ input {
     gap: 30px;
 }
 
+.feedback.success {
+  background-color: green;
+}
+
+.feedback.error {
+  background-color: rgb(236, 126, 126);
+  padding: 30px;
+  border-radius: 25px;
+  font-family: 'Inter', serif;
+}

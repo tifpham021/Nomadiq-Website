@@ -10,7 +10,7 @@ import EmailResetPage from './pages/resetpages/EmailResetPage.jsx';
 import PassResetPage from './pages/resetpages/PassResetPage.jsx';
 function App() {
   const location = useLocation();
-  const hideNavAndFooter = ["/resetting-pass-email"].includes(location.pathname);
+  const hideNavAndFooter = location.pathname === "/resetting-pass-email" || location.pathname.startsWith("/resetting-pass/");
 
   return (
       <>
@@ -21,7 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/resetting-pass-email" element={<EmailResetPage />} />
-        <Route path="/resetting-pass" element={<PassResetPage />} />
+        <Route path="/resetting-pass/:token" element={<PassResetPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
       </>

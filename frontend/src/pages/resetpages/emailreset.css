@@ -17,9 +17,8 @@
 
 .big-mail-icon {
     width: 150px;
-    position: relative;
-    
-
+    display: flex;
+    justify-self: center;
 }
 
 .box h1 {

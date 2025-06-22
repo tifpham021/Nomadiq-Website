@@ -9,14 +9,20 @@ import mail from '../../assets/login-img/mail.png';
 import background from '../../assets/login-img/loginscreen.png';
 import React, { useState } from 'react';
 import { useCreateUser } from "./signup-linking.js";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpPage = () => {
+    const navigate = useNavigate();
     const [inputUsername, setUsername] = useState('');
     const [inputEmail, setEmail] = useState('');
     const [inputPassword, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const createUser = useCreateUser(state => state.createUser);
     
+    const notifySuccess = (msg) => toast.success(msg, { autoClose: 5000 });
+    const notifyError = (msg) => toast.error(msg, { autoClose: 6000 });
     
         const handleSubmit= async (e) => {
             e.preventDefault();
@@ -39,11 +45,14 @@ const SignUpPage = () => {
     });
     
       if (success) {
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
+        notifySuccess("Signup successful!");
+        setTimeout(() => {
+            navigate("/login");
+        }, 2500);
+      } else {
+        notifyError(message);
       }
+
     }
     return (
         <div
@@ -55,9 +64,10 @@ const SignUpPage = () => {
                         height: '100vh',
                         width:'100vw'
                     }}
-                >
+                >  
                     <div className="signup-page-content">
                         <div className='signup-left'>
+                             <ToastContainer position="top-center" />
                             <img src={bigUser} className='bigUser'/>
                             <form onSubmit={handleSubmit}>
                                 <div className='inputs'>
