@@ -67,8 +67,8 @@ body {
 }
 
 .main-text {
-    font-size: clamp(5rem, 10vw, 7rem);
-    margin: 0 0 2rem 0;
+    font-size: clamp(5rem, 7vw, 7rem);
+    margin: -1.5rem 0 2rem 0;
     font-family: 'Alegreya SC', serif;
     font-weight: 800;
 }

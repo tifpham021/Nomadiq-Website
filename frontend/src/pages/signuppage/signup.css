@@ -31,21 +31,21 @@ body {
 .bigUser {
     display: flex;
     justify-self: center;
-    width: 160px;
+    width: 120px;
 }
 
 .username img {
     background-color: #AAD8E9;
     padding: 15px;
     border-radius: 30px;
-    height: 50px;
+    height: 45px;
 }
 
 .password img {
     background-color: #76AFE4;
     padding: 15px;
     border-radius: 30px;
-    height: 50px;
+    height: 45px;
 }
 
 input {
@@ -53,7 +53,7 @@ input {
     border-radius: 30px;
     padding: 20px;
     width: 470px;
-    height: 35px;
+    height: 32px;
     font-size: 18px;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 500;
@@ -70,8 +70,17 @@ input {
 .inputs {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 50px;
     margin: 36px 0px;
+}
+
+.name-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+.name-inputs input{
+    width: 210px;
 }
 
 

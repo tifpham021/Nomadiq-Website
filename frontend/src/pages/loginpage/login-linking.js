@@ -14,9 +14,17 @@ export const useLoginUser = create((set) => ({
 
       if (data.success) {
         set({ user: data.user });
-      }
-
-      return data;
+        return {
+          success: true,
+          message: data.message || "Login successful",
+          userData: data.user
+        }
+      } 
+      
+      return {
+        success: false,
+        message: data.message || "Invalid credentials",
+      };
     } catch (error) {
       return { success: false, message: "Network error" };
     }

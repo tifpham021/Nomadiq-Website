@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-login {
+    background-color: #AAD8E9;
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* separates icon from links */
+    
+}
+
+.earthIcon {
+    height: 55px;
+    margin: 0 25px;
+}
+
+.navbar-links {
+    display: flex;
+    right: 0;
+    position: fixed;
+    gap: 80px;
+    font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding-right: 4%;
+}
+
+.dropdown-wrapper {
+    background-color: #DFF6FF;
+    padding: 0px 20px;
+    border-radius: 25px;
+    font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
+    font-size: 14px;
+    width: 200px;
+    z-index: 1000;
+    position: absolute;
+    transform: translateX(-40%);
+    margin-top: 3%;
+    gap: 0px;
+}
+
+.dropdown-wrapper a{
+    color: black;
+    text-decoration: none;
+    border-radius: 25px;
+    width: 100%;
+    padding: 5px 5px 5px 5px;
+}
+
+.dropdown-plan a:hover,  .dropdown-bookings a:hover{
+    background-color: #BFE4F3;
+    width: 101%;
+    padding: 5px 20px;
+    transform: translateX(-8.5%)
+}
+
+.dropdown-pack a{
+    justify-items: center;
+}
+
+.dropdown-pack a:hover {
+    background-color: #BFE4F3;
+    justify-items: center;
+    padding: 5px 20px;
+    width: 101%;
+    transform: translateX(-8.5%)
+}
+
+
+
+.dropdown-profile {
+    transform: translateX(-25%);
+    width: 120px;
+    padding: 0px 20px;
+    justify-content: center;
+}
+.dropdown-profile a:hover{
+    background-color: #BFE4F3;
+    width: 101%;
+    padding: 5px 20px;
+    transform: translateX(-12.5%);
+}
+
+.arrow-img {
+    width: 25px;
+    height: 25px;
+    align-self: center;
+}
+
+.nav-header {
+    display: flex;
+}
+
+.dropdown {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+    height: 60px;
+}
+
+.dropdown p {
+    align-self: center;
+}
+.dropdown-icon {
+    height: 35px;
+    align-self: center;
+}
+
+.plane {
+    height: 40px;
+}
+
+.shirt{
+    width: 45px;
+    height: 35px;
+}
+
+.dropdown-suitcase {
+    right: 50%;
+    left: 50%;
+    font-size: 15px;
+}
+
+.dropdown-building {
+    font-size: 15px;
+}
+
+.dropdown-user {
+    gap: 2px;
+    font-size: 15px;
+}
+
+.dropdown-logout {
+    gap: 6px;
+    font-size: 15px;
+}
+.suitcase {
+    height: 45px;
+    padding-left: 10px;
+}
+
+.user {
+    width: 45px;
+    height: 45px;
+    margin-left: -3px;
+}
+
+.logout {
+    width: 45px;
+    height: 45px;
+}
+
+.dropdown-mic {
+    gap: 0px;
+}
+
+.mic {
+    width: 40px;
+    height: 40px;
+    
+}
+
+@media (max-width: 768px) {
+
+    .dropdown-wrapper,
+    .dropdown-wrapper a {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .navbar-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        flex-direction: column;
+        background-color: #a9d3e2;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-size: 17px;
+        
+    }
+
+    .navbar-links.open {
+        display: flex;
+    }
+
+    .hamburger {
+        display: block;
+        font-size: 36px;
+        cursor: pointer;
+    }
+
+    .dropdown-wrapper {
+        background-color: #DFF6FF;
+        font-family: 'Noto Sans Thai', serif;
+        font-weight: 700;
+        font-size: 19px;
+        position: absolute;
+        border-radius: 0;
+        z-index: 1000;
+    }
+
+    .dropdown-wrapper a{
+        color: black;
+        text-decoration: none;
+        width: 100%;
+        padding: 5px 5px 5px 5px;
+        font-size: 18px;
+    }
+
+    .dropdown-plan a:hover,  .dropdown-bookings a:hover{
+        background-color: #BFE4F3;
+        padding: 5px 20px;
+        transform: translateX(-3%);
+        border-radius: 0px;
+    }
+
+    .dropdown-pack a{
+        justify-items: center;
+    }
+
+    .dropdown-pack a:hover {
+        background-color: #BFE4F3;
+        justify-items: center;
+        padding: 5px 20px;
+        border-radius: 0px;
+    }
+
+    .dropdown-profile {
+        transform: translateX(-40%);
+        width: 100vw;
+        padding: 0px 20px;
+        justify-content: center;
+    }
+    .dropdown-profile a:hover{
+        background-color: #BFE4F3;
+        padding: 5px 20px;
+    }
+
+    .dropdown-user {
+        gap: 7px;
+    }
+
+    .dropdown-mic {
+        gap: 20px;
+    }
+
+    .dropdown-pin, .dropdown-cloud, .dropdown-checklist, .dropdown-plane,
+    .dropdown-map, .dropdown-suitcase, .dropdown-shirt, .dropdown-takeoff,
+    .dropdown-building, .dropdown-mic, .dropdown-user, .dropdown-logout {
+        display: flex;
+        justify-content: center;
+    }
+}

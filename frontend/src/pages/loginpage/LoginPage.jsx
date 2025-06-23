@@ -24,14 +24,16 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const res = await loginUser({username, password});
 
-        const {success, message} = await loginUser({username, password});
-
-        if (success) {
+        if (res.success) {
+            if (res.userData){
+            localStorage.setItem("user", JSON.stringify(res.userData));
+        }
             notifySuccess("Welcome back!");
             setTimeout(() => navigate('/logged-in-home-page'), 1500);
         } else {
-            notifyError(message);
+            notifyError(res.message);
         }
     };
     return (

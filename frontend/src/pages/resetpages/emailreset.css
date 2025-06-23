@@ -15,8 +15,7 @@
     padding: 50px;
 }
 
-.big-mail-icon {
-    width: 150px;
+.big-mail-icon { width: 150px;
     display: flex;
     justify-self: center;
 }

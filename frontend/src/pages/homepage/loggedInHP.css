@@ -1,0 +1,8 @@
+.top-text {
+    margin: 0;
+}
+
+.main-text-lp {
+    margin-top: -10%;
+    font-size: clamp(6.5rem, 8vw, 8rem);
+}

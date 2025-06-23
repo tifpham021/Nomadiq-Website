@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
+    name: {
+        type:String,
+        required: [true, "Please enter your name"],
+        trim: true
+    },
     username:{
         type: String,
         required: [true, 'A username is required'],

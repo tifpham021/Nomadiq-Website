@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Navbar from './components/navbar/NavBar.jsx';
@@ -8,20 +7,34 @@ import LoginPage from './pages/loginpage/LoginPage.jsx';
 import SignUpPage from './pages/signuppage/SignUpPage.jsx';
 import EmailResetPage from './pages/resetpages/EmailResetPage.jsx';
 import PassResetPage from './pages/resetpages/PassResetPage.jsx';
+import NavbarLoggedIn from './components/navbar/NavBar-LoggedIn.jsx';
+import React, { useState, useEffect } from 'react';
+import LoggedInHomePage from './pages/homepage/LoggedInHomePage.jsx';
+
 function App() {
   const location = useLocation();
   const hideNavAndFooter = location.pathname === "/resetting-pass-email" || location.pathname.startsWith("/resetting-pass/");
 
+  const [user, setUser] = useState(null);
+
+  // Check localStorage on app load or route change
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    console.log("Stored user:", storedUser);
+    setUser(storedUser);
+  }, [location]);
   return (
       <>
     
-      {!hideNavAndFooter && <Navbar />}
+      {!hideNavAndFooter && (user ? <NavbarLoggedIn setUser={setUser}/> : <Navbar/>)}
       <Routes>
+        
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/resetting-pass-email" element={<EmailResetPage />} />
         <Route path="/resetting-pass/:token" element={<PassResetPage />} />
+        <Route path="/logged-in-home-page" element={<LoggedInHomePage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
       </>

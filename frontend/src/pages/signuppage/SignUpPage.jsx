@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpPage = () => {
     const navigate = useNavigate();
+    const [inputName, setName] = useState('');
     const [inputUsername, setUsername] = useState('');
     const [inputEmail, setEmail] = useState('');
     const [inputPassword, setPassword] = useState('');
@@ -27,7 +28,7 @@ const SignUpPage = () => {
         const handleSubmit= async (e) => {
             e.preventDefault();
     
-        if (!inputUsername.trim() || !inputEmail.trim() || !inputPassword.trim()) {
+        if (!inputName.trim() || !inputUsername.trim() || !inputEmail.trim() || !inputPassword.trim()) {
             alert("Please fill in all fields");
             return;
         }
@@ -38,6 +39,7 @@ const SignUpPage = () => {
         }
     
       const { success, message } = await createUser({
+        name: inputName,
         username: inputUsername,
         email: inputEmail,
         password: inputPassword,
@@ -72,11 +74,19 @@ const SignUpPage = () => {
                             <form onSubmit={handleSubmit}>
                                 <div className='inputs'>
                                     <div className='top-inputs'>
-                                        <div className='username'>
-                                            <img src={userIcon}/>
-                                            <input type="text" placeholder='Enter your username...'
-                                            value={inputUsername}
-                                            onChange={(e) => setUsername(e.target.value)}/>
+                                        <div className='name-inputs'>
+                                            <div className='username'>
+                                                <img src={userIcon}/>
+                                                <input type="text" placeholder='Enter your name...'
+                                                value={inputName}
+                                                onChange={(e) => setName(e.target.value)}/>
+                                            </div>
+                                            <div className='username'>
+                                        
+                                                <input type="text" placeholder='Enter your username...'
+                                                value={inputUsername}
+                                                onChange={(e) => setUsername(e.target.value)}/>
+                                            </div>
                                         </div>
                                         <div className='username'>
                                             <img src={mail}/>

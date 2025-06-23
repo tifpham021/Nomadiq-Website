@@ -4,7 +4,7 @@ export const useCreateUser = create ((set) => ({
     user_info: [],
     setInfo: (user_info) => set({user_info}),
     createUser: async (newUser) => {
-        if (!newUser.username || !newUser.email || !newUser.password || !newUser.confirmpass) {
+        if (!newUser.name || !newUser.username || !newUser.email || !newUser.password || !newUser.confirmpass) {
             return { success: false, message: "Please fill out all fields" };
         }
         if (newUser.confirmpass !== newUser.password) {
