@@ -36,12 +36,12 @@ const LoggedInHomePage = () => {
 
             <div id="home" className='home-part'>
                 <div className='text-on-left'>
-                    <div className='top-text'>
+                    <div className='top-text-lp'>
                         <h2>WELCOME</h2>
                         <h2>BACK</h2>
                     </div>
-                    <h1 className='main-text-lp'>{username}</h1>
-                    <h3 className='descript-text'>Let's Start Planning Your Trip</h3>
+                    <h1 className='main-text-lp' style={{ textTransform: "uppercase "}}>{username}</h1>
+                    <h3 className='descript-text-lp'>Let's Start Planning Your Trip</h3>
                 </div>
                 <div className='images'>
                     <img src={bridgeImg} className='bridgeImg'/>

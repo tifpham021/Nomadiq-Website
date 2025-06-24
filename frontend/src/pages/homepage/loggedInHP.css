@@ -1,8 +1,30 @@
-.top-text {
-    margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@800&display=swap');
+
+.top-text-lp {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+    justify-content: center;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-family: 'Alegreya SC', serif;
+    font-weight: 700;
 }
 
 .main-text-lp {
-    margin-top: -10%;
-    font-size: clamp(6.5rem, 8vw, 8rem);
+    margin-top: -3%;
+    font-size: clamp(5.5rem, 8vw, 8rem);
+    font-family: 'Alegreya SC', serif;
+    font-weight: 700;
 }
+
+.descript-text-lp {
+    display: flex;
+    font-size: clamp(1.8rem, 3vw, 2rem);
+    text-align: center;
+    justify-content: center;
+    font-family: 'Fira Sans Condensed', serif;
+    font-weight: 700;
+    margin-top: -10%;
+}
+

@@ -10,6 +10,7 @@ import PassResetPage from './pages/resetpages/PassResetPage.jsx';
 import NavbarLoggedIn from './components/navbar/NavBar-LoggedIn.jsx';
 import React, { useState, useEffect } from 'react';
 import LoggedInHomePage from './pages/homepage/LoggedInHomePage.jsx';
+import PlanningPage from './pages/planningPages/planningPage.jsx';
 
 function App() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function App() {
         <Route path="/resetting-pass-email" element={<EmailResetPage />} />
         <Route path="/resetting-pass/:token" element={<PassResetPage />} />
         <Route path="/logged-in-home-page" element={<LoggedInHomePage />} />
+        <Route path="/choose+destination+dates" element={<PlanningPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
       </>
