@@ -3,7 +3,7 @@ import image from  '../../assets/planning-img/popup.png';
 import {useNavigate} from 'react-router-dom';
 
 const Popup = ({onClose}) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     return (
         <div className='popup-overlay'>
             <div className="popup">

@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Sunflower&display=swap');
+
+
+.weather-wrapper {
+    padding-top: 60px;
+}
+
+.buttons-top button{
+    background-color: #8EBEDD;
+    color: white;
+    border-radius: 30px;
+    padding: 12px 20px;
+    box-shadow: 1px 3px 2px #688ba3;
+    font-family: 'Sunflower', sans-serif;
+}
+
+.buttons-top {
+    justify-content: space-between;
+    display: flex;
+    padding: 1%;
+}
+
+.buttons-top button:hover {
+    transform: translateY(2px);
+    box-shadow: 1px 3px 4px #395c73;
+}
+
+.buttons-top button:active {
+    transform: scale(0.98);
+    box-shadow: 1px 4px 5px rgb(55, 85, 107);
+}
+
+.weather-content {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px;
+}
+
+.box1-w, .box2-w, .box3-w, .box4-w {
+    background-color: #ADDEFD;
+    opacity: 45%;
+    width: 300px;
+    height: 450px;
+    border-radius: 30px;
+}
