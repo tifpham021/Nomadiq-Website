@@ -52,7 +52,7 @@ body {
     align-content: center;
     margin-top: -50px;
     justify-content: center;
-    padding-left: clamp(15%, 210%);
+    padding-left: clamp(1rem, 10vw, 5rem);
     margin-left: 5%;
 
 }
@@ -68,7 +68,7 @@ body {
 
 .main-text {
     font-size: clamp(5rem, 7vw, 7rem);
-    margin: -1.5rem 0 2rem 0;
+    margin: 0 0 2rem 0;
     font-family: 'Alegreya SC', serif;
     font-weight: 800;
 }
@@ -291,7 +291,6 @@ body {
     .all-boxes {
         justify-content: center;
         gap: 20px;
-
     }
 }
 
@@ -336,9 +335,7 @@ body {
         padding: 8px;
     }
     .about-descript {
-        margin: 0 auto;
         padding: 0 5%;
-        max-width: 36%;
     }
 
     .all-boxes {
@@ -346,4 +343,56 @@ body {
         justify-content: center;
         gap: 0;
     }
+}
+
+@media (max-width: 992px) {
+
+    .text-on-left {
+        align-content: center;
+        margin-top: -50px;
+        justify-content: center;
+    }
+
+    .top-text {
+        font-size: 2rem;
+        justify-self: center ;
+        font-family: 'Alegreya SC', serif;
+        font-weight: 800;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .main-text {
+        font-size: 6rem;
+        margin: 0 0 2rem 0;
+        font-family: 'Alegreya SC', serif;
+        font-weight: 800;
+    }
+
+    .descript-text {
+        font-size: 2rem;
+    }
+
+    .greenImg {
+        display: none;
+    }
+
+    .townImg {
+        display: none;
+    }
+
+    .all-boxes {
+        display: grid;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .about-descript {
+        margin: 2% 15%;
+    }
+}
+
+
+@media (min-width: 1200px) {
+
 }

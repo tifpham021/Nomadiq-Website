@@ -1,6 +1,11 @@
 import '../planningPages/weather.css';
 import background from '../../assets/planning-img/weather.png';
 import {useNavigate} from 'react-router-dom';
+import sun from '../../assets/planning-img/sun.png';
+import rain from '../../assets/planning-img/rain.png';
+import thunder from '../../assets/planning-img/thunder.png';
+import wind from'../../assets/planning-img/wind.png';
+
 const WeatherPage = () => {
     const navigate = useNavigate();
     return (
