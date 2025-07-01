@@ -69,11 +69,11 @@ export default function LoggedInNav({setUser}) {
                     
                     header="Plan"
                     elements={[
-                        {label: "Choose Destination + Dates", icon: pin, iconClass: "pin", navigate:"choose+destination+dates"},
+                        {label: "Choose Destination + Dates", icon: pin, iconClass: "pin", navigate:"choose-destination-dates"},
                         {label:"Check the Weather", icon: cloud, iconClass: "cloud", navigate:"weather"},
-                        {label:"Plan your Itinerary", icon: checklist, iconClass: "checklist", navigate:"plan+itinerary"},
-                        {label:"Track your Flight", icon: plane, iconClass: "plane", navigate:"track+flight"} ,
-                        {label:"Learn more about your Destination", icon: map, iconClass: "map", navigate:"learn+more"}
+                        {label:"Plan your Itinerary", icon: checklist, iconClass: "checklist", navigate:"plan-itinerary"},
+                        {label:"Track your Flight", icon: plane, iconClass: "plane", navigate:"track-flight"} ,
+                        {label:"Learn more about your Destination", icon: map, iconClass: "map", navigate:"learn-more"}
                     ]}
                     isOpen={openDropdown === "Plan"}
                     onToggle={() => handleToggle("Plan")}
@@ -81,8 +81,8 @@ export default function LoggedInNav({setUser}) {
                 <NavbarLoggedIn
                     header="Pack"
                     elements={[
-                        {label:"Packing List", icon: suitcase, iconClass: "suitcase", navigate:"packing+list"},
-                        {label:"Outfit Suggestions", icon: shirt, iconClass: "shirt", navigate:"outfit+suggestions"},
+                        {label:"Packing List", icon: suitcase, iconClass: "suitcase", navigate:"packing-list"},
+                        {label:"Outfit Suggestions", icon: shirt, iconClass: "shirt", navigate:"outfit-suggestions"},
                     ]}
                     isOpen={openDropdown === "Pack"}
                     onToggle={() => handleToggle("Pack")}
@@ -90,9 +90,9 @@ export default function LoggedInNav({setUser}) {
                 <NavbarLoggedIn
                     header="Bookings"
                     elements={[
-                        {label:"Flights + Transportation", icon: takeoff, iconClass: "takeoff", navigate:"flights+transportation"},
+                        {label:"Flights + Transportation", icon: takeoff, iconClass: "takeoff", navigate:"flights-transportation"},
                         {label:"Accomodations", icon: building, iconClass: "building", navigate:"accomodations"},
-                        {label:"Activities + Experiences", icon: mic, iconClass: "mic", navigate:"activities+experiences"},
+                        {label:"Activities + Experiences", icon: mic, iconClass: "mic", navigate:"activities-experiences"},
                         ]}
                     isOpen={openDropdown === "Bookings"}
                     onToggle={() => handleToggle("Bookings")}
@@ -100,7 +100,7 @@ export default function LoggedInNav({setUser}) {
                 <NavbarLoggedIn
                     header="Profile"
                     elements={[
-                        {label:"My Account", icon: user , iconClass: "user", navigate:"my+account"},
+                        {label:"My Account", icon: user , iconClass: "user", navigate:"my-account"},
                        {label: "Logout", icon: exit, iconClass: "logout", onClick: handleLogout},
                         ]}
                     isOpen={openDropdown === "Profile"}

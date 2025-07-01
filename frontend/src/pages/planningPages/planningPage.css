@@ -19,7 +19,6 @@ body {
     width: 1000px;
     height: 500px;
     border-radius: 120px;
-    margin-top: -80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,7 +107,10 @@ body {
     border-width: 13px;
     padding: 15px 5px;
     box-shadow: 1px 3px 5px #485e68;
+    position: relative;
     z-index: 2;
+    margin-top: 5%;
+    margin-bottom: -2%;
 }
 
 .top-box input {
@@ -130,7 +132,6 @@ body {
 
 .bottom-box {
     display: grid;
-    margin-top: -22%;
     justify-items: center;
     justify-self: center;
     align-self: center;
@@ -143,25 +144,27 @@ body {
     border-width: 13px;
     padding: 15px 5px;
     box-shadow: 1px 3px 5px #485e68;
-    z-index: 3;
-
+    margin-top: -3%;
+    position: relative;
+    z-index: 2;
 }
 
 .bottom-box h3 {
     font-family: 'Inter', serif;
     font-size: 18px;
-    margin-top: -4px;
+    margin-top: -7px;
 }
 
 .transportation {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     align-content: center;
 }
 
 .transportation p {
    margin: 0;
    font-family: 'Noto Sans Georgian', serif;
+   font-weight: 400;
    font-size: 13px;
 }
 
@@ -171,14 +174,26 @@ body {
     border-radius: 20px;
     box-shadow: 1px 3px 2px rgb(115, 116, 118);
     width: 65px;
-    height: 45px;
+    height: 55px;
     padding: 5px 3px 3px 3px;
-    margin-top: -12px;
+    margin-top: -10px;
+    display: grid;
+}
+
+.box1 img, .box2 img, .box3 img, .box4 img{
+    justify-self: center;
 }
 
 .box1:hover, .box2:hover, .box3:hover, .box4:hover {
     box-shadow: 1px 3px 2px rgb(115, 116, 118);
     background-color: #E6E4E4;
+    transform: translateY(2px);
+}
+
+.box1.active, .box2.active, .box3.active, .box4.active {
+    box-shadow: 1px 3px 2px rgb(67, 69, 73);
+    background-color: #73A1BE;
+    transform: scale(0.98);
 }
 
 .arrow-bg img {

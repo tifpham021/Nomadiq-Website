@@ -37,7 +37,7 @@ function App() {
         <Route path="/resetting-pass-email" element={<EmailResetPage />} />
         <Route path="/resetting-pass/:token" element={<PassResetPage />} />
         <Route path="/logged-in-home-page" element={<LoggedInHomePage />} />
-        <Route path="/choose+destination+dates" element={<PlanningPage />} />
+        <Route path="/choose-destination-dates" element={<PlanningPage />} />
         <Route path="/weather" element={<WeatherPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}

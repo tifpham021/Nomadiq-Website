@@ -9,11 +9,20 @@ import Calendar from 'react-calendar';
 import React, {useState} from 'react';
 import 'react-calendar/dist/Calendar.css';
 import Popup from './popup.jsx';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useSaveInfo } from './planning-linking.js';
 
 const PlanningPage = () => {
     const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+    const [destination, setDestination] = useState('');
     const [arrivalDate, departureDate] = dateRange;
+    const [transportation, setTransportation] = useState('');
     const [showPopup, setShowPopup] = useState(false);
+    const saveInfo = useSaveInfo(state => state.saveInfo);
+
+    const notifySuccess = (msg) => toast.success(msg, { autoClose: 3000 });
+    const notifyError = (msg) => toast.error(msg, { autoClose: 3000 });
 
     const formatDateForInput = (date) => {
         return date.toLocaleDateString('en-US', {
@@ -24,20 +33,44 @@ const PlanningPage = () => {
         });
     };
 
-    const handleInputChange = (e) => {
-        const newDate = new Date(e.target.value);
-        if (isNaN(newDate)) return;
-
-        if (type === 'arrival') {
-            setDateRange([newDate, departureDate]);
-        } else if (type === 'departure') {
-            setDateRange([arrivalDate, newDate]);
-    }
-
-    const confirmationPopup = () => {
-        
-    }
+    const handleSelect = (mode) => {
+        setTransportation(mode);
     };
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!destination || !transportation || !dateRange) {
+            notifyError("Please fill out all fields.");
+            return;
+        }
+
+        const parts = destination.split(',').map(part => part.trim());
+        if (parts.length !== 2 || !parts[0] || !parts[1]) {
+            notifyError("Please enter destination as 'City, Country'.");
+        return;
+        }
+
+        const res = await saveInfo({
+            destination, 
+            date:{arrival: arrivalDate, departure: departureDate}, 
+            transportation,
+        });
+        console.log("Save Info Result:", res);
+
+        if (res.success) {
+            if(res.plan){
+                localStorage.setItem("plan", JSON.stringify(res.plan));
+            }
+            notifySuccess(res.message);
+            setShowPopup(true);
+        } else {
+            notifyError(res.message);
+        }
+    }
+
+
     return (
         <div
             className="planning-page-wrapper"
@@ -50,62 +83,76 @@ const PlanningPage = () => {
                             
                         }}
                         >
-            {showPopup && <Popup onClose={() => setShowPopup(false)} />}
-            <div className='top-box'>
-                <h3>Your Destination:</h3>
-                <input placeholder="Where you're going..."/>
-            </div>
-            <div className='inner-box'>
-                <div className='inner-box-items'>
-                    <div className='calendar'>
-                        <Calendar
-                            prevLabel={<span>◀</span>}
-                            nextLabel={<span>▶</span>}
-                            next2Label={null}
-                            prev2Label={null}
-                            minDate={new Date()}
-                            maxDate={new Date(2030, 12, 31)}
-                            selectRange={true}
-                            value={dateRange}
-                            onChange={(range) => setDateRange(range)}
-                        />
-                    </div>
-                    <div className='dates'>
-                        <h3>Date of Arrival</h3>
-                        <input value={formatDateForInput(arrivalDate)}
-                               />
-                        <h3>Date of Departure</h3>
-                        <input value={formatDateForInput(departureDate)}
+            <form onSubmit={handleSubmit}>
+                {showPopup && <Popup onClose={() => setShowPopup(false)} />}
+
+                <div className='top-box'>
+                    <h3>Your Destination:</h3>
+                    <input placeholder="City, Country (e.g. Los Angeles, USA)"
+                    value= {destination}
+                    onChange={(e) => setDestination(e.target.value)}/>
+                </div>
+                <div className='inner-box'>
+                    <div className='inner-box-items'>
+                        <div className='calendar'>
+                            <Calendar
+                                prevLabel={<span>◀</span>}
+                                nextLabel={<span>▶</span>}
+                                next2Label={null}
+                                prev2Label={null}
+                                minDate={new Date()}
+                                maxDate={new Date(2030, 12, 31)}
+                                selectRange={true}
+                                value={dateRange}
+                                onChange={(range) => setDateRange(range)}
                             />
+                        </div>
+                        <div className='dates'>
+                            <h3>Date of Arrival</h3>
+                            <input value={formatDateForInput(arrivalDate)}
+                                readOnly/>
+                            <h3>Date of Departure</h3>
+                            <input value={formatDateForInput(departureDate)}
+                                readOnly/>
+                        </div>
+                        <div className='confirm-details'>
+                                <button className='arrow-bg' type='submit' >
+                                    <img src={arrow}/>
+                                </button>
+                        </div>
                     </div>
-                    <div className='confirm-details'>
-                            <button className='arrow-bg' onClick={() => setShowPopup(true)}>
-                                <img src={arrow}/>
+                </div>
+                <div className='bottom-box'>
+                    <h3>Mode of Transportation</h3>
+                    <div className='transportation'>
+                        <div>
+                            <button type="button" className={`box1 ${transportation ==='Car' ? 'active' : ''}`} onClick={() => handleSelect('Car')}>
+                                <img src={car} width="35px" height="26px" alt="Car"/>
+                                <p>Car</p>
                             </button>
+                        </div>
+                        <div>
+                            <button type="button" className={`box2 ${transportation ==='Plane' ? 'active' : ''}`} onClick={() => handleSelect('Plane')}>
+                                <img src={plane} width="30px" height="26px" alt="Plane"/>
+                                <p>Plane</p>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" className={`box3 ${transportation ==='Train' ? 'active' : ''}`} onClick={() => handleSelect('Train')}>
+                                <img src={train} width="26px" height="26px" alt="Train"/>
+                                <p>Train</p>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" className={`box4 ${transportation ==='Other' ? 'active' : ''}`} onClick={() => handleSelect('Other')}>
+                                <img src={bike} width="35px" height="26px" alt="Other"/>
+                                <p>Other</p>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className='bottom-box'>
-                <h3>Mode of Transportation</h3>
-                <div className='transportation'>
-                    <div className='box1'>
-                        <img src={car} width="35px" height="26px"/>
-                        <p>Car</p>
-                    </div>
-                    <div className='box2'>
-                        <img src={plane} width="30px" height="26px"/>
-                        <p>Plane</p>
-                    </div>
-                    <div className='box3'>
-                        <img src={train} width="26px" height="26px"/>
-                        <p>Train</p>
-                    </div>
-                    <div className='box4'>
-                        <img src={bike} width="35px" height="26px"/>
-                        <p>Other</p>
-                    </div>
-                </div>
-            </div>
+            </form>
+            <ToastContainer position="top-center" />
         </div>
     );
 }

@@ -3,12 +3,37 @@ import dotenv from 'dotenv';
 import {connectDB} from './config/db.js';
 import Message from './models/faqs.model.js';
 import User from './models/signup.model.js';
+import UserPlan from './models/planning.model.js';
 import { Resend } from 'resend';
 import crypto from 'crypto';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
 const app = express();
+const apiKey = process.env.WEATHER_API_KEY;
+const days = 5;
+
+app.get('/api/weather', async (req, res) => {
+  const city = req.query.city;
+
+  if (!city) {
+    return res.status(400).json({message: 'City is required'});
+  }
+  const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=${days}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      return res.status(response.status).json({ message: 'Error fetching weather data from API' });
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Fetch error:', error);
+    res.status(500).json({ message: 'Error fetching weather data' });
+  }
+});
 
 app.use(express.json());
 
@@ -167,6 +192,27 @@ app.post("/api/resetting-password/:token", async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
+});
+
+app.post('/api/choose-destination-dates', async (req, res) => {
+    const {destination, date, transportation} = req.body;
+    if (!destination || !date || !transportation) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    try {
+        const userPlan = await UserPlan({destination, date, transportation});
+        await userPlan.save();
+        return res.status(200).json({
+        success:true,
+        message: 'Plan was saved successfully',
+        userPlan
+        });
+    } catch (error) {
+        console.error('Error saving plan:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
 });
 
 app.listen(3000, () => {
