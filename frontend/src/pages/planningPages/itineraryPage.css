@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mohave:wght@600&display=swap');
+
+.itinerary-wrapper {
+    padding-top: 7%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    font-family: 'Noto Sans Thai', serif;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 25px;
+}
+
+.heading button {
+    color: white;
+    background-color: #82BCD6;
+    border-radius: 30px;
+    font-size: 20px;
+    display: flex;
+    align-self: center;
+    padding: 10px 15px;
+    box-shadow: 2px 2px 2px #51798b;
+}
+
+.heading button:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 3px 2px rgba(47, 60, 70, 0.729)
+}
+
+.left-boxes {
+    background-color: rgba(255, 255, 255, 0.259);
+    width: 70%;
+    height: 95%;
+    border-radius: 50px;
+}
+
+.three-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.morning, .afternoon, .evening {
+    background-color: rgba(255, 255, 255, 0.34);
+    height: 500px;
+    width: 300px;
+    text-align: center;
+    border-radius: 30px;
+
+}
+
+.morning h2, .afternoon h2, .evening h2{
+    font-family: 'Mohave', serif;
+    font-size: 28px;
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.bottom-buttons .arrow {
+    background-color: #a8cde6ba;
+    border-radius: 50%;
+    width: 75px;
+    height: 70px;
+    padding: 20px;
+    align-content: center;
+    box-shadow: 2px 2px 2px #647a89ba;
+    justify-content: center;
+}
+
+.bottom-buttons img {
+    width: 55px;
+    height: 30px;
+}
+
+.bottom-buttons .arrow:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 3px 2px #526571ba;
+}
+
+
+.bottom-buttons button {
+    color: white;
+    background-color: #82BCD6;
+    border-radius: 35px;
+    padding: 18px 25px;
+    font-size: 21px;
+    box-shadow: 2px 3px 2px #374752ba;
+}
+
+.bottom-buttons button:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 4px 2px #394954ba;
+}
+
+.right-boxes {
+    width: 20%;
+    display: grid;
+}
+
+.map-box, .suggestions-box {
+    background-color: rgba(255, 255, 255, 0.259);
+    border-radius: 30px;
+}
+
+.map-box {
+    height: 65%;
+    display: grid;
+    gap: 0;
+}
+
+.map {
+    justify-self: center;
+    height: 85%;
+    padding: 15px;
+}
+
+.map-box button {
+    color: #538BA4;
+    background-color: rgba(255, 255, 255, 0.571);
+    justify-content: center;
+    border-radius: 25px;
+    text-align: center;
+    padding: 12px;
+    margin: 0px;
+    width: 100%;
+    font-size: 25px;
+    box-shadow: 2px 2px 2px #bcc5cd;
+}
+
+.map-box button:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 3px 2px #9ca5ac;
+}
+
+.suggestions-box {
+    height: 165%;
+    display: grid;
+    margin-top: -170px
+}
+
+.suggestions-box h2{
+    text-align: center;
+}
+
+.suggestions-bottom {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-content: flex-end;
+    margin: 15px;
+}
+
+
+.plus {
+    color: #538BA4;
+    background-color: #E8F5FB;
+    border-radius: 50%;
+    font-size: 40px;
+    height: 45px;
+    align-self: end;
+    align-items: center;
+    padding: 10px;
+    font-family: 'Noto Sans Thai', serif;
+    margin: 5px;
+    box-shadow: 2px 2px 2px #bcc5cd;
+}
+
+.plus:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 3px 2px #9ca5ac;
+}
+
+.view-more {
+    color: #538BA4;
+    background-color: #E8F5FB;
+    border-radius: 25px;
+    height: 60px;
+    align-self: end;
+    align-items: center;
+    font-size: 22px;
+    padding: 10px 15px;
+    font-family: 'Noto Sans Thai', serif;
+    box-shadow: 2px 2px 2px #bcc5cd;
+}
+
+.view-more:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 3px 2px #9ca5ac;
+}
+

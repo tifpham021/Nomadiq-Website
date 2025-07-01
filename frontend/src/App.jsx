@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import LoggedInHomePage from './pages/homepage/LoggedInHomePage.jsx';
 import PlanningPage from './pages/planningPages/planningPage.jsx';
 import WeatherPage from './pages/planningPages/weatherPage.jsx';
+import ItineraryPage from './pages/planningPages/itineraryPage.jsx';
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/logged-in-home-page" element={<LoggedInHomePage />} />
         <Route path="/choose-destination-dates" element={<PlanningPage />} />
         <Route path="/weather" element={<WeatherPage />} />
+        <Route path="/plan-itinerary" element={<ItineraryPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
       </>
