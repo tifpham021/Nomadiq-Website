@@ -3,6 +3,8 @@ import background from '../../assets/planning-img/itinerary.png';
 import lArrow from '../../assets/planning-img/left-arrow.png';
 import rArrow from '../../assets/planning-img/right-arrow.png';
 import map from '../../assets/planning-img/map.png';
+import add from '../../assets/planning-img/add.png';
+import trash from '../../assets/planning-img/trash.png';
 import {useEffect, useState} from 'react';
 const ItineraryPage = () => {
     const [tripInfo, setTripInfo] = useState(null);
@@ -10,6 +12,29 @@ const ItineraryPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [temp, setTemp] = useState(null);
     const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+    const [editing, setEditing] = useState(false);
+    const [deleteBox, setDeleteBox] = useState(false);
+    const [inputDayBoxes, setInputDayBoxes] = useState([]);
+    const [inputNightBoxes, setInputNightBoxes] = useState([]);
+    const MAX_BOXES = 4;
+
+    const handleAddBoxDay = () => {
+        if (inputDayBoxes.length >= MAX_BOXES) return;
+        setInputDayBoxes((prev) => [...prev, { time: '', text: '', checked: false }]);
+    };
+
+    const handleAddBoxNight = () => {
+        if (inputNightBoxes.length >= MAX_BOXES) return;
+        setInputNightBoxes((prev) => [...prev, { time: '', text: '', checked: false }]);
+    };
+
+    const handleDeleteLastDayBox = () => {
+        setInputDayBoxes((prev) => prev.slice(0, -1)); // removes last item
+    };
+
+    const handleDeleteLastNightBox = () => {
+        setInputNightBoxes((prev) => prev.slice(0, -1)); // removes last item
+    };
 
     useEffect(() => {
         const storedPlan = JSON.parse(localStorage.getItem("plan"));
@@ -32,7 +57,7 @@ const ItineraryPage = () => {
     }, [tripInfo])
 
     useEffect(() => {
-        if (tripInfo.destination ) {
+        if (tripInfo && tripInfo.destination ) {
             const date = getDateTemp();
             fetchWeather(tripInfo.destination, date);
             console.log(date);
@@ -52,7 +77,13 @@ const ItineraryPage = () => {
         const startDate = new Date(tripInfo.date.arrival);
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + currentPage);
-        return currentDate.toISOString().split('T')[0];
+
+        const formatted = currentDate.toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric"
+        });
+        return formatted;
     };
 
     const getDateTemp = () => {
@@ -88,24 +119,121 @@ const ItineraryPage = () => {
                 <div className='heading'>
                     <h3>Avg Temp: {temp}°</h3>
                     <h1 style={{textTransform: 'uppercase'}}>DAY {currentPage + 1}: {getDateForPage()}</h1>
-                    <button type='submit'>EDIT</button>
+                    <button type='submit' onClick={() => setEditing(prev => !prev)}> {editing? "SAVE" : "EDIT"}</button>
                 </div>
-                <div className='three-boxes'>
-                    <div className='morning'>
-                        <h2>MORNING</h2>
+                {editing ? (
+                    <div className='itinerary'>
+                        <div className='planning-boxes'>
+                            <div className='planning-box1'>
+                                <h2>Day Time</h2>
+                                {inputDayBoxes.map((box, index) => (
+                                <div className='check-box-inputs' key={index}>
+                                    <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={box.checked}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputDayBoxes];
+                                        newBoxes[index].checked = e.target.checked;
+                                        setInputDayBoxes(newBoxes);
+                                    }}
+                                    />
+                                    <input
+                                    type="text"
+                                    className="check-box-time"
+                                    placeholder="Time..."
+                                    value={box.time}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputDayBoxes];
+                                        newBoxes[index].time = e.target.value;
+                                        setInputDayBoxes(newBoxes);
+                                    }}
+                                    />
+                                    <input
+                                    type="text"
+                                    className="check-box-text"
+                                    placeholder="Enter activity..."
+                                    value={box.text}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputDayBoxes];
+                                        newBoxes[index].text = e.target.value;
+                                        setInputDayBoxes(newBoxes);
+                                    }}
+                                    />
+                                </div>
+                                ))}
+
+                                <div className='editing-buttons'>
+                                <button onClick={handleAddBoxDay}><img src={add} /></button>
+                                <button onClick={handleDeleteLastDayBox}><img src={trash} /></button>
+                                </div>
+                            </div>
+                            <div className='planning-box2'>
+                                <h2>Night Time</h2>
+                                {inputNightBoxes.map((box, index) => (
+                                <div className='check-box-inputs' key={index}>
+                                    <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={box.checked}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputNightBoxes];
+                                        newBoxes[index].checked = e.target.checked;
+                                        setInputNightBoxes(newBoxes);
+                                    }}
+                                    />
+                                    <input
+                                    type="text"
+                                    className="check-box-time"
+                                    placeholder="Time..."
+                                    value={box.time}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputNightBoxes];
+                                        newBoxes[index].time = e.target.value;
+                                        setInputNightBoxes(newBoxes);
+                                    }}
+                                    />
+                                    <input
+                                    type="text"
+                                    className="check-box-text"
+                                    placeholder="Enter activity..."
+                                    value={box.text}
+                                    onChange={(e) => {
+                                        const newBoxes = [...inputNightBoxes];
+                                        newBoxes[index].text = e.target.value;
+                                        setInputNightBoxes(newBoxes);
+                                    }}
+                                    />
+                                </div>
+                                ))}
+                                <div className='editing-buttons'>
+                                <button onClick={handleAddBoxNight}><img src={add} /></button>
+                                <button onClick={handleDeleteLastNightBox}><img src={trash} /></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='bottom-buttons'>
+                            <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
+                            <button>GENERATE ME ONE</button>
+                            <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
+                        </div>
+                    </div>):
+                    <div className='itinerary'>
+                        <div className='planning-boxes'>
+                            <div className='planning-box1'>
+                                <h2>Day Time</h2>
+                            </div>
+                            <div className='planning-box2'>
+                                <h2>Night Time</h2>
+                            </div>
+                        </div>
+                        <div className='bottom-buttons'>
+                            <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
+                            <button>GENERATE ME ONE</button>
+                            <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
+                        </div>
                     </div>
-                    <div className='afternoon'>
-                        <h2>AFTERNOON</h2>
-                    </div>
-                    <div className='evening'>
-                        <h2>EVENING</h2>
-                    </div>
-                </div>
-                <div className='bottom-buttons'>
-                    <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
-                    <button>GENERATE ME ONE</button>
-                    <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
-                </div>
+                }
             </div>
             <div className='right-boxes'>
                 <div className='map-box'>
