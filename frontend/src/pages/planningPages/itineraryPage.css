@@ -11,8 +11,13 @@
 
 .heading {
     display: flex;
-    justify-content: space-between;
     margin: 10px 25px;
+    align-items: center;
+}
+
+.heading h1 {
+    flex: 1;
+    text-align: center;
 }
 
 .heading button {

@@ -7,10 +7,17 @@ import UserPlan from './models/planning.model.js';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 import fetch from 'node-fetch';
+import Itinerary from './models/itinerary.model.js';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // your frontend origin
+}));
+
 const apiKey = process.env.WEATHER_API_KEY;
 const days = 5;
 
@@ -214,6 +221,29 @@ app.post('/api/choose-destination-dates', async (req, res) => {
     }
 
 });
+
+app.post('/api/plan-itinerary', async (req, res) => {
+  try {
+    const {userId, date, dayBoxes, nightBoxes} = req.body;
+
+    const updated = await Itinerary.findOneAndUpdate(
+      {userId, date},
+      {dayBoxes, nightBoxes},
+      {new: true, upsert: true}
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    res.status(500).json({ message: "Error saving itinerary", error: err });
+  }
+})
+
+app.get('/api/plan-itinerary', async (req, res) => {
+  const { userId, date } = req.query;
+  const itinerary = await Itinerary.findOne({ userId, date });
+  if (!itinerary) return res.status(404).json({ error: "Not found" });
+  res.json(itinerary);
+});
+
 
 app.listen(3000, () => {
     connectDB();

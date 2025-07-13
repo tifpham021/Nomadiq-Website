@@ -8,24 +8,22 @@ import trash from '../../assets/planning-img/trash.png';
 import {useEffect, useState} from 'react';
 const ItineraryPage = () => {
     const [tripInfo, setTripInfo] = useState(null);
-    const [tripLength, setTripLength] = useState('');
+    const [tripLength, setTripLength] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    const [temp, setTemp] = useState(null);
     const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
     const [editing, setEditing] = useState(false);
-    const [deleteBox, setDeleteBox] = useState(false);
     const [inputDayBoxes, setInputDayBoxes] = useState([]);
     const [inputNightBoxes, setInputNightBoxes] = useState([]);
     const MAX_BOXES = 4;
 
     const handleAddBoxDay = () => {
         if (inputDayBoxes.length >= MAX_BOXES) return;
-        setInputDayBoxes((prev) => [...prev, { time: '', text: '', checked: false }]);
+        setInputDayBoxes((prev) => [...prev, { time: '', activity: '', checked: false }]);
     };
 
     const handleAddBoxNight = () => {
         if (inputNightBoxes.length >= MAX_BOXES) return;
-        setInputNightBoxes((prev) => [...prev, { time: '', text: '', checked: false }]);
+        setInputNightBoxes((prev) => [...prev, { time: '', activity: '', checked: false }]);
     };
 
     const handleDeleteLastDayBox = () => {
@@ -56,13 +54,6 @@ const ItineraryPage = () => {
         }
     }, [tripInfo])
 
-    useEffect(() => {
-        if (tripInfo && tripInfo.destination ) {
-            const date = getDateTemp();
-            fetchWeather(tripInfo.destination, date);
-            console.log(date);
-        }
-    }, [tripInfo, currentPage]);
 
     const prevPage = () => {
         setCurrentPage((prev) => (prev > 0 ? prev-1: prev));
@@ -93,18 +84,84 @@ const ItineraryPage = () => {
         return startDate.toISOString().split('T')[0];
     }
 
-    const fetchWeather = async (city, dateStr) => {
-        try {
-            const res = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(city)}&dt=${dateStr}`);
-            const data = await res.json();
-            const forecast = data.forecast.forecastday.find(day => day.date === dateStr);
-            if (forecast) {
-                setTemp(forecast.day.avgtemp_f);
+
+        const loadItinerary = async () => {
+            if (!tripInfo) return;
+            try {
+            const date = getDateTemp();
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userId = user?._id || user?.id;
+            
+            if (!userId) {
+                console.error("No user logged in");
+                return;
             }
+
+            const res = await fetch(`http://localhost:3000/api/plan-itinerary?userId=${userId}&date=${date}`);
+            
+            if (!res.ok) {
+                console.error("Failed to load itinerary");
+                return;
+            }
+
+            const data = await res.json();
+            console.log("Response from load:", data);
+
+            if (data) {
+                setInputDayBoxes(data.dayBoxes || []);
+                setInputNightBoxes(data.nightBoxes || []);
+            }
+            } catch (err) {
+            console.error('No itinerary found for this date:', err);
+            }
+        };
+
+        const saveItinerary = async () => {
+        if (!tripInfo) return;
+
+        try {
+            const date = getDateTemp(); // e.g. 2025-07-08
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userId = user?._id || user?.id;
+
+            if (!userId) {
+            // handle case if no logged in user, maybe redirect to login or show a message
+            console.error("No user logged in");
+            return;
+            }
+
+            const payload = {
+            userId,
+            date,
+            dayBoxes: inputDayBoxes,
+            nightBoxes: inputNightBoxes
+            };
+
+            const res = await fetch('http://localhost:3000/api/plan-itinerary', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            console.log("Saved:", data);
+
+            if (data) {
+            // Update state to reflect saved data immediately
+                setInputDayBoxes(data.dayBoxes || []);
+                setInputNightBoxes(data.nightBoxes || []);
+            }
+            await loadItinerary();
         } catch (err) {
-            console.error('Failed to fetch weather:', err);
+            console.error('Failed to save itinerary:', err);
         }
     };
+
+        useEffect(() => {
+            loadItinerary();
+        }, [tripInfo, currentPage]);
 
     return (
         <div className='itinerary-wrapper'
@@ -117,9 +174,12 @@ const ItineraryPage = () => {
                 >
             <div className='left-boxes'>
                 <div className='heading'>
-                    <h3>Avg Temp: {temp}°</h3>
-                    <h1 style={{textTransform: 'uppercase'}}>DAY {currentPage + 1}: {getDateForPage()}</h1>
-                    <button type='submit' onClick={() => setEditing(prev => !prev)}> {editing? "SAVE" : "EDIT"}</button>
+                    <h1 className='day' style={{textTransform: 'uppercase'}}>DAY {currentPage + 1}: {getDateForPage()}</h1>
+                    <button className='editing-button' type='submit' 
+                    onClick={async () => {
+                        if (editing) await saveItinerary();
+                        setEditing(prev => !prev);
+                    }}> {editing? "SAVE" : "EDIT"}</button>
                 </div>
                 {editing ? (
                     <div className='itinerary'>
@@ -142,7 +202,7 @@ const ItineraryPage = () => {
                                     type="text"
                                     className="check-box-time"
                                     placeholder="Time..."
-                                    value={box.time}
+                                    value={box.time || ''}
                                     onChange={(e) => {
                                         const newBoxes = [...inputDayBoxes];
                                         newBoxes[index].time = e.target.value;
@@ -153,10 +213,10 @@ const ItineraryPage = () => {
                                     type="text"
                                     className="check-box-text"
                                     placeholder="Enter activity..."
-                                    value={box.text}
+                                    value={box.activity}
                                     onChange={(e) => {
                                         const newBoxes = [...inputDayBoxes];
-                                        newBoxes[index].text = e.target.value;
+                                        newBoxes[index].activity = e.target.value;
                                         setInputDayBoxes(newBoxes);
                                     }}
                                     />
@@ -186,7 +246,7 @@ const ItineraryPage = () => {
                                     type="text"
                                     className="check-box-time"
                                     placeholder="Time..."
-                                    value={box.time}
+                                    value={box.time || ''}
                                     onChange={(e) => {
                                         const newBoxes = [...inputNightBoxes];
                                         newBoxes[index].time = e.target.value;
@@ -197,10 +257,10 @@ const ItineraryPage = () => {
                                     type="text"
                                     className="check-box-text"
                                     placeholder="Enter activity..."
-                                    value={box.text}
+                                    value={box.activity}
                                     onChange={(e) => {
                                         const newBoxes = [...inputNightBoxes];
-                                        newBoxes[index].text = e.target.value;
+                                        newBoxes[index].activity = e.target.value;
                                         setInputNightBoxes(newBoxes);
                                     }}
                                     />
@@ -217,22 +277,102 @@ const ItineraryPage = () => {
                             <button>GENERATE ME ONE</button>
                             <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
                         </div>
-                    </div>):
-                    <div className='itinerary'>
-                        <div className='planning-boxes'>
-                            <div className='planning-box1'>
-                                <h2>Day Time</h2>
+                    </div>): (
+                        <>
+                        <div className='itinerary'>
+                            <div className='planning-boxes'>
+                                <div className='planning-box1'>
+                                    <h2>Day Time</h2>
+                                    {inputDayBoxes.map((box, index) => (
+                                    <div className='check-box-inputs' key={index}>
+                                        <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={box.checked} 
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputDayBoxes];
+                                            newBoxes[index].checked = e.target.checked;
+                                            setInputDayBoxes(newBoxes);
+                                        }}
+                                        />
+                                        <input
+                                        type="text"
+                                        className="check-box-time"
+                                        placeholder="Time..."
+                                        value={box.time || ''}
+                                        readOnly={!editing} 
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputDayBoxes];
+                                            newBoxes[index].time = e.target.value;
+                                            setInputDayBoxes(newBoxes);
+                                        }}
+                                        />
+                                        <input
+                                        type="text"
+                                        className="check-box-text"
+                                        placeholder="Enter activity..."
+                                        value={box.activity}
+                                        readOnly={!editing} 
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputDayBoxes];
+                                            newBoxes[index].activity = e.target.value;
+                                            setInputDayBoxes(newBoxes);
+                                        }}
+                                        />
+                                    </div>
+                                    ))}
+
+                                </div>
+                                <div className='planning-box2'>
+                                    <h2>Night Time</h2>
+                                    {inputNightBoxes.map((box, index) => (
+                                    <div className='check-box-inputs' key={index}>
+                                        <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={box.checked}
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputNightBoxes];
+                                            newBoxes[index].checked = e.target.checked;
+                                            setInputNightBoxes(newBoxes);
+                                        }}
+                                        />
+                                        <input
+                                        type="text"
+                                        className="check-box-time"
+                                        placeholder="Time..."
+                                        value={box.time || ''}
+                                        readOnly={!editing} 
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputNightBoxes];
+                                            newBoxes[index].time = e.target.value;
+                                            setInputNightBoxes(newBoxes);
+                                        }}
+                                        />
+                                        <input
+                                        type="text"
+                                        className="check-box-text"
+                                        placeholder="Enter activity..."
+                                        value={box.activity}
+                                        readOnly={!editing} 
+                                        onChange={(e) => {
+                                            const newBoxes = [...inputNightBoxes];
+                                            newBoxes[index].activity = e.target.value;
+                                            setInputNightBoxes(newBoxes);
+                                        }}
+                                        />
+                                    </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div className='planning-box2'>
-                                <h2>Night Time</h2>
+                            <div className='bottom-buttons'>
+                                <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
+                                <button>GENERATE ME ONE</button>
+                                <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
                             </div>
-                        </div>
-                        <div className='bottom-buttons'>
-                            <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
-                            <button>GENERATE ME ONE</button>
-                            <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
-                        </div>
                     </div>
+                        </>
+                    )
                 }
             </div>
             <div className='right-boxes'>
