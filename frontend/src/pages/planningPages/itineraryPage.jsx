@@ -12,26 +12,56 @@ const ItineraryPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
     const [editing, setEditing] = useState(false);
-    const [inputDayBoxes, setInputDayBoxes] = useState([]);
-    const [inputNightBoxes, setInputNightBoxes] = useState([]);
+    const [dayData, setDayData] = useState({});
     const MAX_BOXES = 4;
 
     const handleAddBoxDay = () => {
-        if (inputDayBoxes.length >= MAX_BOXES) return;
-        setInputDayBoxes((prev) => [...prev, { time: '', activity: '', checked: false }]);
+        if (currentDayBoxes.length >= MAX_BOXES) return;
+        const newBoxes = [...currentDayBoxes, { time: '', activity: '', checked: false }];
+        updateDayBoxes(newBoxes);
     };
 
     const handleAddBoxNight = () => {
-        if (inputNightBoxes.length >= MAX_BOXES) return;
-        setInputNightBoxes((prev) => [...prev, { time: '', activity: '', checked: false }]);
+        if (currentNightBoxes.length >= MAX_BOXES) return;
+        const newBoxes = [...currentNightBoxes, { time: '', activity: '', checked: false }];
+        updateNightBoxes(newBoxes);
     };
 
     const handleDeleteLastDayBox = () => {
-        setInputDayBoxes((prev) => prev.slice(0, -1)); // removes last item
+        const newBoxes = currentDayBoxes.slice(0, -1);
+        updateDayBoxes(newBoxes);
     };
 
     const handleDeleteLastNightBox = () => {
-        setInputNightBoxes((prev) => prev.slice(0, -1)); // removes last item
+        const newBoxes = currentNightBoxes.slice(0, -1);
+        updateNightBoxes(newBoxes);
+    };
+
+    const getDateTemp = () => {
+        if (!tripInfo) return '';
+        const startDate = new Date(tripInfo.date.arrival);
+        startDate.setDate(startDate.getDate() + currentPage);
+        return startDate.toISOString().split('T')[0];
+    }
+
+    const updateDayBoxes = (newBoxes) => {
+    setDayData(prev => ({
+        ...prev,
+        [getDateTemp()]: {
+        ...(prev[getDateTemp()] || {}),
+        dayBoxes: newBoxes
+        }
+    }));
+    };
+
+    const updateNightBoxes = (newBoxes) => {
+    setDayData(prev => ({
+        ...prev,
+        [getDateTemp()]: {
+        ...(prev[getDateTemp()] || {}),
+        nightBoxes: newBoxes
+        }
+    }));
     };
 
     useEffect(() => {
@@ -55,12 +85,18 @@ const ItineraryPage = () => {
     }, [tripInfo])
 
 
-    const prevPage = () => {
-        setCurrentPage((prev) => (prev > 0 ? prev-1: prev));
+    const prevPage = async () => {
+        if (currentPage > 0) {
+            if (editing) await saveItinerary();
+            setCurrentPage((prev) => (prev - 1));
+        }
     };
 
-    const nextPage = () => {
-        setCurrentPage((prev) => (prev < tripLength - 1 ? prev + 1: prev));
+    const nextPage = async () => {
+        if (currentPage < tripLength - 1) {
+            if (editing) await saveItinerary();
+            setCurrentPage((prev) => (prev + 1));
+        }
     }
 
     const getDateForPage = () => {
@@ -77,12 +113,8 @@ const ItineraryPage = () => {
         return formatted;
     };
 
-    const getDateTemp = () => {
-        if (!tripInfo) return '';
-        const startDate = new Date(tripInfo.date.arrival);
-        startDate.setDate(startDate.getDate() + currentPage);
-        return startDate.toISOString().split('T')[0];
-    }
+    const currentDayBoxes = dayData[getDateTemp()]?.dayBoxes || [];
+    const currentNightBoxes = dayData[getDateTemp()]?.nightBoxes || [];
 
 
         const loadItinerary = async () => {
@@ -107,10 +139,14 @@ const ItineraryPage = () => {
             const data = await res.json();
             console.log("Response from load:", data);
 
-            if (data) {
-                setInputDayBoxes(data.dayBoxes || []);
-                setInputNightBoxes(data.nightBoxes || []);
+            setDayData(prev => ({
+            ...prev,
+            [date]: {
+                dayBoxes: data.dayBoxes || [],
+                nightBoxes: data.nightBoxes || []
             }
+            }));
+
             } catch (err) {
             console.error('No itinerary found for this date:', err);
             }
@@ -133,8 +169,8 @@ const ItineraryPage = () => {
             const payload = {
             userId,
             date,
-            dayBoxes: inputDayBoxes,
-            nightBoxes: inputNightBoxes
+            dayBoxes: dayData[date]?.dayBoxes || [],
+            nightBoxes: dayData[date]?.nightBoxes || []
             };
 
             const res = await fetch('http://localhost:3000/api/plan-itinerary', {
@@ -149,9 +185,13 @@ const ItineraryPage = () => {
             console.log("Saved:", data);
 
             if (data) {
-            // Update state to reflect saved data immediately
-                setInputDayBoxes(data.dayBoxes || []);
-                setInputNightBoxes(data.nightBoxes || []);
+                setDayData(prev => ({
+                    ...prev,
+                    [date]: {
+                        dayBoxes: data.dayBoxes || [],
+                        nightBoxes: data.nightBoxes || []
+                    }
+                }));
             }
             await loadItinerary();
         } catch (err) {
@@ -186,16 +226,16 @@ const ItineraryPage = () => {
                         <div className='planning-boxes'>
                             <div className='planning-box1'>
                                 <h2>Day Time</h2>
-                                {inputDayBoxes.map((box, index) => (
+                                {currentDayBoxes.map((box, index) => (
                                 <div className='check-box-inputs' key={index}>
                                     <input
                                     type="checkbox"
                                     className="checkbox"
                                     checked={box.checked}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputDayBoxes];
+                                        const newBoxes = [...currentDayBoxes];
                                         newBoxes[index].checked = e.target.checked;
-                                        setInputDayBoxes(newBoxes);
+                                        updateDayBoxes(newBoxes);
                                     }}
                                     />
                                     <input
@@ -204,9 +244,9 @@ const ItineraryPage = () => {
                                     placeholder="Time..."
                                     value={box.time || ''}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputDayBoxes];
+                                        const newBoxes = [...currentDayBoxes];
                                         newBoxes[index].time = e.target.value;
-                                        setInputDayBoxes(newBoxes);
+                                        updateDayBoxes(newBoxes);
                                     }}
                                     />
                                     <input
@@ -215,9 +255,9 @@ const ItineraryPage = () => {
                                     placeholder="Enter activity..."
                                     value={box.activity}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputDayBoxes];
+                                        const newBoxes = [...currentDayBoxes];
                                         newBoxes[index].activity = e.target.value;
-                                        setInputDayBoxes(newBoxes);
+                                        updateDayBoxes(newBoxes);
                                     }}
                                     />
                                 </div>
@@ -230,16 +270,16 @@ const ItineraryPage = () => {
                             </div>
                             <div className='planning-box2'>
                                 <h2>Night Time</h2>
-                                {inputNightBoxes.map((box, index) => (
+                                {currentNightBoxes.map((box, index) => (
                                 <div className='check-box-inputs' key={index}>
                                     <input
                                     type="checkbox"
                                     className="checkbox"
                                     checked={box.checked}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputNightBoxes];
+                                        const newBoxes = [...currentNightBoxes];
                                         newBoxes[index].checked = e.target.checked;
-                                        setInputNightBoxes(newBoxes);
+                                        updateNightBoxes(newBoxes);
                                     }}
                                     />
                                     <input
@@ -248,9 +288,9 @@ const ItineraryPage = () => {
                                     placeholder="Time..."
                                     value={box.time || ''}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputNightBoxes];
+                                        const newBoxes = [...currentNightBoxes];
                                         newBoxes[index].time = e.target.value;
-                                        setInputNightBoxes(newBoxes);
+                                        updateNightBoxes(newBoxes);
                                     }}
                                     />
                                     <input
@@ -259,9 +299,9 @@ const ItineraryPage = () => {
                                     placeholder="Enter activity..."
                                     value={box.activity}
                                     onChange={(e) => {
-                                        const newBoxes = [...inputNightBoxes];
+                                        const newBoxes = [...currentNightBoxes];
                                         newBoxes[index].activity = e.target.value;
-                                        setInputNightBoxes(newBoxes);
+                                        updateNightBoxes(newBoxes);
                                     }}
                                     />
                                 </div>
@@ -283,16 +323,17 @@ const ItineraryPage = () => {
                             <div className='planning-boxes'>
                                 <div className='planning-box1'>
                                     <h2>Day Time</h2>
-                                    {inputDayBoxes.map((box, index) => (
+                                    {currentDayBoxes.map((box, index) => (
                                     <div className='check-box-inputs' key={index}>
                                         <input
                                         type="checkbox"
                                         className="checkbox"
-                                        checked={box.checked} 
+                                        checked={box.checked}
+ 
                                         onChange={(e) => {
-                                            const newBoxes = [...inputDayBoxes];
+                                            const newBoxes = [...currentDayBoxes];
                                             newBoxes[index].checked = e.target.checked;
-                                            setInputDayBoxes(newBoxes);
+                                            updateDayBoxes(newBoxes);
                                         }}
                                         />
                                         <input
@@ -302,9 +343,9 @@ const ItineraryPage = () => {
                                         value={box.time || ''}
                                         readOnly={!editing} 
                                         onChange={(e) => {
-                                            const newBoxes = [...inputDayBoxes];
+                                            const newBoxes = [...currentDayBoxes];
                                             newBoxes[index].time = e.target.value;
-                                            setInputDayBoxes(newBoxes);
+                                            updateDayBoxes(newBoxes);
                                         }}
                                         />
                                         <input
@@ -314,9 +355,9 @@ const ItineraryPage = () => {
                                         value={box.activity}
                                         readOnly={!editing} 
                                         onChange={(e) => {
-                                            const newBoxes = [...inputDayBoxes];
+                                            const newBoxes = [...currentDayBoxes];
                                             newBoxes[index].activity = e.target.value;
-                                            setInputDayBoxes(newBoxes);
+                                            updateDayBoxes(newBoxes);
                                         }}
                                         />
                                     </div>
@@ -325,16 +366,16 @@ const ItineraryPage = () => {
                                 </div>
                                 <div className='planning-box2'>
                                     <h2>Night Time</h2>
-                                    {inputNightBoxes.map((box, index) => (
+                                    {currentNightBoxes.map((box, index) => (
                                     <div className='check-box-inputs' key={index}>
                                         <input
                                         type="checkbox"
                                         className="checkbox"
                                         checked={box.checked}
                                         onChange={(e) => {
-                                            const newBoxes = [...inputNightBoxes];
+                                            const newBoxes = [...currentNightBoxes];
                                             newBoxes[index].checked = e.target.checked;
-                                            setInputNightBoxes(newBoxes);
+                                            updateNightBoxes(newBoxes);
                                         }}
                                         />
                                         <input
@@ -344,9 +385,9 @@ const ItineraryPage = () => {
                                         value={box.time || ''}
                                         readOnly={!editing} 
                                         onChange={(e) => {
-                                            const newBoxes = [...inputNightBoxes];
+                                            const newBoxes = [...currentNightBoxes];
                                             newBoxes[index].time = e.target.value;
-                                            setInputNightBoxes(newBoxes);
+                                            updateNightBoxes(newBoxes);
                                         }}
                                         />
                                         <input
@@ -356,9 +397,9 @@ const ItineraryPage = () => {
                                         value={box.activity}
                                         readOnly={!editing} 
                                         onChange={(e) => {
-                                            const newBoxes = [...inputNightBoxes];
+                                            const newBoxes = [...currentNightBoxes];
                                             newBoxes[index].activity = e.target.value;
-                                            setInputNightBoxes(newBoxes);
+                                            updateNightBoxes(newBoxes);
                                         }}
                                         />
                                     </div>
