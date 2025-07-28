@@ -13,6 +13,7 @@ import LoggedInHomePage from './pages/homepage/LoggedInHomePage.jsx';
 import PlanningPage from './pages/planningPages/planningPage.jsx';
 import WeatherPage from './pages/planningPages/weatherPage.jsx';
 import ItineraryPage from './pages/planningPages/itineraryPage.jsx';
+import MapPage from './pages/planningPages/mapPage.jsx';
 
 function App() {
   const location = useLocation();
@@ -20,7 +21,6 @@ function App() {
 
   const [user, setUser] = useState(null);
 
-  // Check localStorage on app load or route change
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     console.log("Stored user:", storedUser);
@@ -41,6 +41,7 @@ function App() {
         <Route path="/choose-destination-dates" element={<PlanningPage />} />
         <Route path="/weather" element={<WeatherPage />} />
         <Route path="/plan-itinerary" element={<ItineraryPage />} />
+        <Route path="/itinerary-map" element={<MapPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
       </>

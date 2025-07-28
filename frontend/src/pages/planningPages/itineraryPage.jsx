@@ -6,6 +6,7 @@ import map from '../../assets/planning-img/map.png';
 import add from '../../assets/planning-img/add.png';
 import trash from '../../assets/planning-img/trash.png';
 import {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 const ItineraryPage = () => {
     const [tripInfo, setTripInfo] = useState(null);
     const [tripLength, setTripLength] = useState(0);
@@ -13,6 +14,7 @@ const ItineraryPage = () => {
     const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
     const [editing, setEditing] = useState(false);
     const [dayData, setDayData] = useState({});
+    const navigate = useNavigate();
     const MAX_BOXES = 4;
 
     const handleAddBoxDay = () => {
@@ -156,12 +158,11 @@ const ItineraryPage = () => {
         if (!tripInfo) return;
 
         try {
-            const date = getDateTemp(); // e.g. 2025-07-08
+            const date = getDateTemp();
             const user = JSON.parse(localStorage.getItem('user'));
             const userId = user?._id || user?.id;
 
             if (!userId) {
-            // handle case if no logged in user, maybe redirect to login or show a message
             console.error("No user logged in");
             return;
             }
@@ -419,7 +420,7 @@ const ItineraryPage = () => {
             <div className='right-boxes'>
                 <div className='map-box'>
                     <img src={map} className='map'/>
-                    <button>View More</button>
+                    <button onClick={() => navigate('/itinerary-map')}>View More</button>
                 </div>
                 <div className='suggestions-box'>
                     <h2>What You May Like</h2>

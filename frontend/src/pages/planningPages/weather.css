@@ -35,7 +35,7 @@
 
 .weather-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     font-family: 'Noto Sans Thai', sans-serif;
     color: white;
     margin: 50px 120px 0px 120px;
