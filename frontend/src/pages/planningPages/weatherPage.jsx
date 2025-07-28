@@ -18,17 +18,18 @@ const WeatherPage = () => {
 
     useEffect(() => {
         const storedPlan = JSON.parse(localStorage.getItem("plan"));
-        if (storedPlan && storedPlan.destination) {
-            const [city] = storedPlan.destination.split(',').map(s => s.trim());
-            setLocation(city);
-            fetchWeather(city);
+        if (storedPlan && storedPlan.city) {
+            setLocation(storedPlan.city);
+            fetchWeather(storedPlan.city);
         }
     }, []);
 
     
     const fetchWeather = async (city) => {
         try {
-            const res = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+            const res = await fetch(
+              `http://localhost:3000/api/weather?city=${encodeURIComponent(city)}`
+            );
             const data = await res.json();
             setForecast(data);
         } catch (err) {

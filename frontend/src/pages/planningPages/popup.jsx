@@ -5,14 +5,14 @@ import React, { useState, useEffect} from 'react';
 
 const Popup = ({onClose}) => {
     const [location, setLocation] = useState('')
-
     const navigate = useNavigate();
+
     useEffect(() => {
             const storedPlan = JSON.parse(localStorage.getItem("plan"));
-            if (storedPlan && storedPlan.destination) {
-                const[city] = storedPlan.destination.split(',').map(part => part.trim());
-                setLocation(city);
-            }
+            console.log("Loaded plan from localStorage:", storedPlan);
+            if (storedPlan && storedPlan.city) {
+              setLocation(storedPlan.city);
+            } 
       }, []);
     return (
         <div className='popup-overlay'>

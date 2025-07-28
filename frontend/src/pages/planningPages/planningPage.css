@@ -99,7 +99,7 @@ body {
     justify-self: center;
     align-self: center;
     background-color: white;
-    width: 440px;
+    width: 500px;
     height: 70px;
     border-radius: 100px;
     border-style: solid;
@@ -220,3 +220,21 @@ body {
     box-shadow: 1px 5px 6px #30424b;
 }
 
+.arrow-bg:active {
+    transform: scale(0.98);
+    box-shadow: 1px 4px 4px #30424b;
+}
+
+.location-inputs {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.location-inputs .city, .location-inputs .country {
+    width: 80px;
+}
+
+.location-inputs .state {
+    width: 180px;
+}

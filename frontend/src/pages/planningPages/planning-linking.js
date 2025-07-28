@@ -1,13 +1,13 @@
-import {create} from 'zustand';
+import { create } from "zustand";
 
 export const useSaveInfo = create((set) => ({
-    userPlan: null,
-  saveInfo: async ({ destination, date, transportation }) => {
+  userPlan: null,
+  saveInfo: async ({ userId, destination, date, transportation }) => {
     try {
       const res = await fetch("/api/choose-destination-dates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ destination, date, transportation}),
+        body: JSON.stringify({ userId, destination, date, transportation }),
       });
 
       const data = await res.json();
@@ -15,10 +15,10 @@ export const useSaveInfo = create((set) => ({
       if (res.ok && data.success) {
         set({ userPlan: data.userPlan });
         return {
-            success: true,
-            message: data.message || "Plan info saved",
-            plan: data.userPlan
-        }
+          success: true,
+          message: data.message || "Plan info saved",
+          plan: data.userPlan,
+        };
       }
 
       return {
@@ -28,7 +28,7 @@ export const useSaveInfo = create((set) => ({
     } catch (error) {
       return { success: false, message: "Network error" };
     }
-},
-}))
+  },
+}));
 
 export default useSaveInfo;
