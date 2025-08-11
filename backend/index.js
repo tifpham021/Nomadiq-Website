@@ -9,10 +9,18 @@ import crypto from "crypto";
 import fetch from "node-fetch";
 import Itinerary from "./models/itinerary.model.js";
 import cors from "cors";
+import OpenAI from "openai";
+
 
 dotenv.config();
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 const app = express();
+
+app.use(express.json());
 
 app.use(
   cors({
@@ -45,8 +53,6 @@ app.get("/api/weather", async (req, res) => {
     res.status(500).json({ message: "Error fetching weather data" });
   }
 });
-
-app.use(express.json());
 
 app.post("/api/faqs", async (req, res) => {
   const question = req.body;
@@ -330,9 +336,36 @@ app.get("/api/plan-itinerary", async (req, res) => {
   res.json(itinerary);
 });
 
-app.listen(3000, () => {
-  connectDB();
-  console.log("Server started at http://localhost:3000");
+app.post("/api/generate-itinerary", async (req, res) => {
+  const { destination, startDate, endDate } = req.body;
+
+  try {
+    if (!destination || !startDate || !endDate) {
+      return res.status(400).json({ error: "Missing destination or dates" });
+    }
+
+    const prompt = `
+      Create a detailed day-by-day travel itinerary for a trip to ${destination}
+      from ${startDate} to ${endDate}.
+      Include recommended activities, places to eat, and sightseeing, as well as times for those events.
+    `;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    });
+
+    const itinerary = completion.choices[0].message.content;
+    res.json({ itinerary });
+  } catch (error) {
+  console.error("OpenAI error:", error);
+  res.status(500).json({ error: "Failed to generate itinerary" });
+}
 });
 
+connectDB();
 
+app.listen(3000, () => {
+  console.log("Server started at http://localhost:3000");
+});

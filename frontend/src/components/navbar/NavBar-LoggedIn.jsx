@@ -73,7 +73,7 @@ export default function LoggedInNav({setUser}) {
                         {label:"Check the Weather", icon: cloud, iconClass: "cloud", navigate:"weather"},
                         {label:"Plan your Itinerary", icon: checklist, iconClass: "checklist", navigate:"plan-itinerary"},
                         {label:"Track your Flight", icon: plane, iconClass: "plane", navigate:"track-flight"} ,
-                        {label:"Learn more about your Destination", icon: map, iconClass: "map", navigate:"learn-more"}
+                        {label:"Learn more", icon: map, iconClass: "map", navigate:"learn-more"}
                     ]}
                     isOpen={openDropdown === "Plan"}
                     onToggle={() => handleToggle("Plan")}

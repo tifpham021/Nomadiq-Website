@@ -126,6 +126,12 @@ body, html {
     height: 35px;
 }
 
+.dropdown-map img{
+    width: 35px;
+    height: 40px;
+    margin-left: -8px;
+}
+
 .dropdown-suitcase {
     right: 50%;
     left: 50%;

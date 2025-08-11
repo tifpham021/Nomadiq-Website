@@ -18,13 +18,14 @@ body, html {
     align-items: center;
 }
 
-.right {
+.right-nav {
     display: flex;
+    flex-direction: row;
     gap: 35px;
     margin: 0 35px;
 }
 
-.right a {
+.right-nav a {
     color: black;
     font-family: 'Noto Sans Thai', sans-serif;
     font-weight: 700;
@@ -47,11 +48,11 @@ body, html {
 }
 
 @media (max-width: 768px) {
-    .right {
+    .right-nav {
         display: none;
         position: absolute;
         top: 70px;
-        flex-direction: column;
+        flex-direction: row;
         background-color: #a9d3e2;
         width: 100%;
         padding: 20px 0;
@@ -59,7 +60,7 @@ body, html {
         margin: 0;
     }
 
-    .right.open {
+    .right-nav .open {
         display: flex;
     }
 

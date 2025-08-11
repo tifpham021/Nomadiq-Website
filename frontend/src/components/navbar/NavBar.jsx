@@ -14,7 +14,7 @@ const Navbar = () => {
         ☰
       </div>
       
-      <div className={`right ${menuOpen ? 'open' : ''}`}>
+      <div className={`right-nav ${menuOpen ? 'open' : ''}`}>
         <a href = "/login">Login</a>
         <a href = "/signup">Sign Up</a>
       </div>

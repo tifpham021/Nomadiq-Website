@@ -14,6 +14,7 @@ import PlanningPage from './pages/planningPages/planningPage.jsx';
 import WeatherPage from './pages/planningPages/weatherPage.jsx';
 import ItineraryPage from './pages/planningPages/itineraryPage.jsx';
 import MapPage from './pages/planningPages/mapPage.jsx';
+import FlightTrackerPage from "./pages/planningPages/flightTrackerPage.jsx";
 
 function App() {
   const location = useLocation();
@@ -27,11 +28,10 @@ function App() {
     setUser(storedUser);
   }, [location]);
   return (
-      <>
-    
-      {!hideNavAndFooter && (user ? <NavbarLoggedIn setUser={setUser}/> : <Navbar/>)}
+    <>
+      {!hideNavAndFooter &&
+        (user ? <NavbarLoggedIn setUser={setUser} /> : <Navbar />)}
       <Routes>
-        
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -42,9 +42,10 @@ function App() {
         <Route path="/weather" element={<WeatherPage />} />
         <Route path="/plan-itinerary" element={<ItineraryPage />} />
         <Route path="/itinerary-map" element={<MapPage />} />
+        <Route path="/track-flight" element={<FlightTrackerPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
-      </>
+    </>
   );
 }
 

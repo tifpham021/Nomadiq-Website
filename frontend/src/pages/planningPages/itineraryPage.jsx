@@ -11,7 +11,6 @@ const ItineraryPage = () => {
     const [tripInfo, setTripInfo] = useState(null);
     const [tripLength, setTripLength] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
     const [editing, setEditing] = useState(false);
     const [dayData, setDayData] = useState({});
     const navigate = useNavigate();
@@ -204,234 +203,312 @@ const ItineraryPage = () => {
             loadItinerary();
         }, [tripInfo, currentPage]);
 
+    const destination = localStorage.getItem("destination");
+    const startDate = localStorage.getItem("startDate");
+    const endDate = localStorage.getItem("endDate");
+    const [generatedItinerary, setGeneratedItinerary] = useState("");
+    const testDestination = "Paris";
+    const testStartDate = "2025-08-10";
+    const testEndDate = "2025-08-15";
+
+    const handleGenerate = async () => {
+        console.log({ testDestination, testStartDate, testEndDate });
+      console.log("Generating itinerary...");
+      try {
+        const res = await fetch("http://localhost:3000/api/generate-itinerary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            destination: testDestination,
+            startDate: testStartDate,
+            endDate: testEndDate,
+          }),
+        });
+        const data = await res.json();
+        console.log("Response data:", data);
+        if (data.itinerary) {
+          setGeneratedItinerary(data.itinerary);
+        } else {
+          setGeneratedItinerary("No itinerary generated.");
+        }
+      } catch (error) {
+        console.error("Failed to generate itinerary:", error);
+        setGeneratedItinerary("Error generating itinerary.");
+      }
+    };
+
+
     return (
-        <div className='itinerary-wrapper'
-            style={{
-                background: `url(${background})`,
-                
-                backgroundPosition: 'center',
-                height: '87.5vh',
-                width:'100vw',}}
+      <div
+        className="itinerary-wrapper"
+        style={{
+          background: `url(${background})`,
+
+          backgroundPosition: "center",
+          height: "87.5vh",
+          width: "100vw",
+        }}
+      >
+        <div className="left-boxes">
+          <div className="heading">
+            <h1 className="day" style={{ textTransform: "uppercase" }}>
+              DAY {currentPage + 1}: {getDateForPage()}
+            </h1>
+            <button
+              className="editing-button"
+              type="submit"
+              onClick={async () => {
+                if (editing) await saveItinerary();
+                setEditing((prev) => !prev);
+              }}
+            >
+              {" "}
+              {editing ? "SAVE" : "EDIT"}
+            </button>
+          </div>
+          {editing ? (
+            <div className="itinerary">
+              <div className="planning-boxes">
+                <div className="planning-box1">
+                  <h2>Day Time</h2>
+                  {currentDayBoxes.map((box, index) => (
+                    <div className="check-box-inputs" key={index}>
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={box.checked}
+                        onChange={(e) => {
+                          const newBoxes = [...currentDayBoxes];
+                          newBoxes[index].checked = e.target.checked;
+                          updateDayBoxes(newBoxes);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className="check-box-time"
+                        placeholder="Time..."
+                        value={box.time || ""}
+                        onChange={(e) => {
+                          const newBoxes = [...currentDayBoxes];
+                          newBoxes[index].time = e.target.value;
+                          updateDayBoxes(newBoxes);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className="check-box-text"
+                        placeholder="Enter activity..."
+                        value={box.activity}
+                        onChange={(e) => {
+                          const newBoxes = [...currentDayBoxes];
+                          newBoxes[index].activity = e.target.value;
+                          updateDayBoxes(newBoxes);
+                        }}
+                      />
+                    </div>
+                  ))}
+
+                  <div className="editing-buttons">
+                    <button onClick={handleAddBoxDay}>
+                      <img src={add} />
+                    </button>
+                    <button onClick={handleDeleteLastDayBox}>
+                      <img src={trash} />
+                    </button>
+                  </div>
+                </div>
+                <div className="planning-box2">
+                  <h2>Night Time</h2>
+                  {currentNightBoxes.map((box, index) => (
+                    <div className="check-box-inputs" key={index}>
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={box.checked}
+                        onChange={(e) => {
+                          const newBoxes = [...currentNightBoxes];
+                          newBoxes[index].checked = e.target.checked;
+                          updateNightBoxes(newBoxes);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className="check-box-time"
+                        placeholder="Time..."
+                        value={box.time || ""}
+                        onChange={(e) => {
+                          const newBoxes = [...currentNightBoxes];
+                          newBoxes[index].time = e.target.value;
+                          updateNightBoxes(newBoxes);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className="check-box-text"
+                        placeholder="Enter activity..."
+                        value={box.activity}
+                        onChange={(e) => {
+                          const newBoxes = [...currentNightBoxes];
+                          newBoxes[index].activity = e.target.value;
+                          updateNightBoxes(newBoxes);
+                        }}
+                      />
+                    </div>
+                  ))}
+                  <div className="editing-buttons">
+                    <button onClick={handleAddBoxNight}>
+                      <img src={add} />
+                    </button>
+                    <button onClick={handleDeleteLastNightBox}>
+                      <img src={trash} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="bottom-buttons">
+                <button
+                  className="arrow"
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
                 >
-            <div className='left-boxes'>
-                <div className='heading'>
-                    <h1 className='day' style={{textTransform: 'uppercase'}}>DAY {currentPage + 1}: {getDateForPage()}</h1>
-                    <button className='editing-button' type='submit' 
-                    onClick={async () => {
-                        if (editing) await saveItinerary();
-                        setEditing(prev => !prev);
-                    }}> {editing? "SAVE" : "EDIT"}</button>
-                </div>
-                {editing ? (
-                    <div className='itinerary'>
-                        <div className='planning-boxes'>
-                            <div className='planning-box1'>
-                                <h2>Day Time</h2>
-                                {currentDayBoxes.map((box, index) => (
-                                <div className='check-box-inputs' key={index}>
-                                    <input
-                                    type="checkbox"
-                                    className="checkbox"
-                                    checked={box.checked}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentDayBoxes];
-                                        newBoxes[index].checked = e.target.checked;
-                                        updateDayBoxes(newBoxes);
-                                    }}
-                                    />
-                                    <input
-                                    type="text"
-                                    className="check-box-time"
-                                    placeholder="Time..."
-                                    value={box.time || ''}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentDayBoxes];
-                                        newBoxes[index].time = e.target.value;
-                                        updateDayBoxes(newBoxes);
-                                    }}
-                                    />
-                                    <input
-                                    type="text"
-                                    className="check-box-text"
-                                    placeholder="Enter activity..."
-                                    value={box.activity}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentDayBoxes];
-                                        newBoxes[index].activity = e.target.value;
-                                        updateDayBoxes(newBoxes);
-                                    }}
-                                    />
-                                </div>
-                                ))}
-
-                                <div className='editing-buttons'>
-                                <button onClick={handleAddBoxDay}><img src={add} /></button>
-                                <button onClick={handleDeleteLastDayBox}><img src={trash} /></button>
-                                </div>
-                            </div>
-                            <div className='planning-box2'>
-                                <h2>Night Time</h2>
-                                {currentNightBoxes.map((box, index) => (
-                                <div className='check-box-inputs' key={index}>
-                                    <input
-                                    type="checkbox"
-                                    className="checkbox"
-                                    checked={box.checked}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentNightBoxes];
-                                        newBoxes[index].checked = e.target.checked;
-                                        updateNightBoxes(newBoxes);
-                                    }}
-                                    />
-                                    <input
-                                    type="text"
-                                    className="check-box-time"
-                                    placeholder="Time..."
-                                    value={box.time || ''}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentNightBoxes];
-                                        newBoxes[index].time = e.target.value;
-                                        updateNightBoxes(newBoxes);
-                                    }}
-                                    />
-                                    <input
-                                    type="text"
-                                    className="check-box-text"
-                                    placeholder="Enter activity..."
-                                    value={box.activity}
-                                    onChange={(e) => {
-                                        const newBoxes = [...currentNightBoxes];
-                                        newBoxes[index].activity = e.target.value;
-                                        updateNightBoxes(newBoxes);
-                                    }}
-                                    />
-                                </div>
-                                ))}
-                                <div className='editing-buttons'>
-                                <button onClick={handleAddBoxNight}><img src={add} /></button>
-                                <button onClick={handleDeleteLastNightBox}><img src={trash} /></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='bottom-buttons'>
-                            <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
-                            <button>GENERATE ME ONE</button>
-                            <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
-                        </div>
-                    </div>): (
-                        <>
-                        <div className='itinerary'>
-                            <div className='planning-boxes'>
-                                <div className='planning-box1'>
-                                    <h2>Day Time</h2>
-                                    {currentDayBoxes.map((box, index) => (
-                                    <div className='check-box-inputs' key={index}>
-                                        <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                        checked={box.checked}
- 
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentDayBoxes];
-                                            newBoxes[index].checked = e.target.checked;
-                                            updateDayBoxes(newBoxes);
-                                        }}
-                                        />
-                                        <input
-                                        type="text"
-                                        className="check-box-time"
-                                        placeholder="Time..."
-                                        value={box.time || ''}
-                                        readOnly={!editing} 
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentDayBoxes];
-                                            newBoxes[index].time = e.target.value;
-                                            updateDayBoxes(newBoxes);
-                                        }}
-                                        />
-                                        <input
-                                        type="text"
-                                        className="check-box-text"
-                                        placeholder="Enter activity..."
-                                        value={box.activity}
-                                        readOnly={!editing} 
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentDayBoxes];
-                                            newBoxes[index].activity = e.target.value;
-                                            updateDayBoxes(newBoxes);
-                                        }}
-                                        />
-                                    </div>
-                                    ))}
-
-                                </div>
-                                <div className='planning-box2'>
-                                    <h2>Night Time</h2>
-                                    {currentNightBoxes.map((box, index) => (
-                                    <div className='check-box-inputs' key={index}>
-                                        <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                        checked={box.checked}
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentNightBoxes];
-                                            newBoxes[index].checked = e.target.checked;
-                                            updateNightBoxes(newBoxes);
-                                        }}
-                                        />
-                                        <input
-                                        type="text"
-                                        className="check-box-time"
-                                        placeholder="Time..."
-                                        value={box.time || ''}
-                                        readOnly={!editing} 
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentNightBoxes];
-                                            newBoxes[index].time = e.target.value;
-                                            updateNightBoxes(newBoxes);
-                                        }}
-                                        />
-                                        <input
-                                        type="text"
-                                        className="check-box-text"
-                                        placeholder="Enter activity..."
-                                        value={box.activity}
-                                        readOnly={!editing} 
-                                        onChange={(e) => {
-                                            const newBoxes = [...currentNightBoxes];
-                                            newBoxes[index].activity = e.target.value;
-                                            updateNightBoxes(newBoxes);
-                                        }}
-                                        />
-                                    </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className='bottom-buttons'>
-                                <button className='arrow' onClick={prevPage} disabled={currentPage===0}><img src={lArrow}/></button>
-                                <button>GENERATE ME ONE</button>
-                                <button className='arrow' onClick={nextPage} disabled={currentPage === tripLength-1}><img src={rArrow}/></button>
-                            </div>
-                    </div>
-                        </>
-                    )
-                }
+                  <img src={lArrow} />
+                </button>
+                <button>GENERATE ME ONE</button>
+                <button
+                  className="arrow"
+                  onClick={nextPage}
+                  disabled={currentPage === tripLength - 1}
+                >
+                  <img src={rArrow} />
+                </button>
+              </div>
             </div>
-            <div className='right-boxes'>
-                <div className='map-box'>
-                    <img src={map} className='map'/>
-                    <button onClick={() => navigate('/itinerary-map')}>View More</button>
+          ) : (
+            <>
+              <div className="itinerary">
+                <div className="planning-boxes">
+                  <div className="planning-box1">
+                    <h2>Day Time</h2>
+                    <div>{generatedItinerary}</div>
+                    {currentDayBoxes.map((box, index) => (
+                      <div className="check-box-inputs" key={index}>
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          checked={box.checked}
+                          onChange={(e) => {
+                            const newBoxes = [...currentDayBoxes];
+                            newBoxes[index].checked = e.target.checked;
+                            updateDayBoxes(newBoxes);
+                          }}
+                        />
+                        <input
+                          type="text"
+                          className="check-box-time"
+                          placeholder="Time..."
+                          value={box.time || ""}
+                          readOnly={!editing}
+                          onChange={(e) => {
+                            const newBoxes = [...currentDayBoxes];
+                            newBoxes[index].time = e.target.value;
+                            updateDayBoxes(newBoxes);
+                          }}
+                        />
+                        <input
+                          type="text"
+                          className="check-box-text"
+                          placeholder="Enter activity..."
+                          value={box.activity}
+                          readOnly={!editing}
+                          onChange={(e) => {
+                            const newBoxes = [...currentDayBoxes];
+                            newBoxes[index].activity = e.target.value;
+                            updateDayBoxes(newBoxes);
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="planning-box2">
+                    <h2>Night Time</h2>
+                    {currentNightBoxes.map((box, index) => (
+                      <div className="check-box-inputs" key={index}>
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          checked={box.checked}
+                          onChange={(e) => {
+                            const newBoxes = [...currentNightBoxes];
+                            newBoxes[index].checked = e.target.checked;
+                            updateNightBoxes(newBoxes);
+                          }}
+                        />
+                        <input
+                          type="text"
+                          className="check-box-time"
+                          placeholder="Time..."
+                          value={box.time || ""}
+                          readOnly={!editing}
+                          onChange={(e) => {
+                            const newBoxes = [...currentNightBoxes];
+                            newBoxes[index].time = e.target.value;
+                            updateNightBoxes(newBoxes);
+                          }}
+                        />
+                        <input
+                          type="text"
+                          className="check-box-text"
+                          placeholder="Enter activity..."
+                          value={box.activity}
+                          readOnly={!editing}
+                          onChange={(e) => {
+                            const newBoxes = [...currentNightBoxes];
+                            newBoxes[index].activity = e.target.value;
+                            updateNightBoxes(newBoxes);
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className='suggestions-box'>
-                    <h2>What You May Like</h2>
-                    <div className='suggestions-bottom'>
-                        <button className='plus'>+</button>
-                        <button className='view-more'>View More</button>
-                    </div>
+                <div className="bottom-buttons">
+                  <button
+                    className="arrow"
+                    onClick={prevPage}
+                    disabled={currentPage === 0}
+                  >
+                    <img src={lArrow} />
+                  </button>
+                  <button onClick={handleGenerate}>GENERATE ME ONE</button>
+                  <button
+                    className="arrow"
+                    onClick={nextPage}
+                    disabled={currentPage === tripLength - 1}
+                  >
+                    <img src={rArrow} />
+                  </button>
                 </div>
-            </div>
+              </div>
+            </>
+          )}
         </div>
-    )
+        <div className="right-boxes">
+          <div className="map-box">
+            <img src={map} className="map" />
+            <button onClick={() => navigate("/itinerary-map")}>
+              View More
+            </button>
+          </div>
+          <div className="suggestions-box">
+            <h2>What You May Like</h2>
+            <div className="suggestions-bottom">
+              <button className="plus">+</button>
+              <button className="view-more">View More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 }
 
 export default ItineraryPage;
