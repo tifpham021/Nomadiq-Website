@@ -7,6 +7,13 @@
     position: relative;
 }
 
+.weather-wrapper button {
+    outline: none;
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 .buttons-top button{
     background-color: #8EBEDD;
     color: white;
@@ -14,13 +21,16 @@
     padding: 12px 25px;
     box-shadow: 1px 3px 2px #688ba3;
     font-family: 'Sunflower', sans-serif;
+    font-weight: 700;
     font-size: 22px;
+    cursor: pointer;
 }
 
 .buttons-top {
     justify-content: space-between;
     display: flex;
     padding: 1% 3%;
+    margin-top: 18px;
 }
 
 .buttons-top button:hover {
@@ -123,10 +133,12 @@
     text-transform: uppercase;
     color: white;
     font-size: 5rem;
-    margin-top: -1%;
+    margin: -1% auto 0;
     text-shadow: 2px 2px 2px rgb(147, 145, 145);
     font-family: 'Merriweather Sans', serif;
     font-weight: 700;
+    text-align: center;
+    width: 100%;
 }
 
 .icon {
@@ -139,4 +151,92 @@
     height: 15px;
     border-radius: 20px;
     margin: px;
+}
+
+@media (max-width: 1400px) {
+    .weather-content {
+        margin: 40px 80px 0;
+        gap: 18px;
+    }
+
+    .box1-w, .box2-w, .box3-w, .box4-w {
+        width: 240px;
+        height: 390px;
+    }
+
+    .weather-content img {
+        width: 125px;
+    }
+
+    .location {
+        font-size: 4.25rem;
+    }
+}
+
+@media (max-width: 1120px) {
+    .weather-wrapper {
+        min-height: 100vh;
+        height: auto !important;
+        padding-bottom: 40px;
+        overflow-y: auto;
+    }
+
+    .buttons-top {
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .weather-content {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        margin: 32px 32px 0;
+    }
+
+    .arrow-weather-left,
+    .arrow-weather-right {
+        display: none;
+    }
+
+    .box1-w, .box2-w, .box3-w, .box4-w {
+        width: 100%;
+        max-width: 320px;
+        justify-self: center;
+    }
+
+    .location {
+        font-size: 3.4rem;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 720px) {
+    .buttons-top button {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
+    .weather-content {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 26px 18px 0;
+    }
+
+    .box1-w, .box2-w, .box3-w, .box4-w {
+        max-width: 360px;
+        height: 360px;
+    }
+
+    .location {
+        font-size: 2.6rem;
+    }
+
+    .temp-weather {
+        font-size: 26px;
+    }
+
+    .notes-weather {
+        font-size: 18px;
+    }
 }

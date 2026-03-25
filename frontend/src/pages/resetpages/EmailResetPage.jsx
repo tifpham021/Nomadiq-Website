@@ -43,7 +43,7 @@ const EmailResetPage = () => {
             <form onSubmit={handleSubmit}>
                 <img src={bigMail} className='big-mail-icon'/>
                 <h1 className='email-header'>Please Enter the Email you Registered with</h1>
-                <input type='email' placeholder='Enter your email...'
+                <input className='email-input' type='email' placeholder='Enter your email...'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}/>
                 <button className='enter-btn' type='submit'>ENTER</button>

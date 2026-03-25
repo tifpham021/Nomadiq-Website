@@ -48,7 +48,7 @@ body {
     height: 45px;
 }
 
-input {
+.signup-left input {
     border: none;
     border-radius: 30px;
     padding: 20px;
@@ -91,19 +91,27 @@ input {
     border-radius: 30px;
     font-size: 21px;
     font-family: 'Noto Sans Georgian', serif;
+    font-weight: 600;
     cursor: pointer;
     box-shadow: 1px 1px 2px #0f232b;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px auto 0;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
 }
 
 .signup-btn:hover {
-    box-shadow: 2px 3px 4px #132f3a;
-    transform: translateY(2px);
+    background-color: #45636e;
+    box-shadow: 0 8px 16px rgba(15, 35, 43, 0.22);
+    transform: translateY(-1px);
 }
 
 .signup-btn:active {
-    box-shadow: 2px 3px 4px #09181e;
-    transform: scale(0.98);
+    background-color: #314851;
+    box-shadow: 0 3px 8px rgba(9, 24, 30, 0.28);
+    transform: translateY(1px) scale(0.985);
 }
 
 
@@ -159,4 +167,114 @@ input {
   padding: 30px;
   border-radius: 25px;
   font-family: 'Inter', serif;
+}
+
+@media (max-width: 1320px) {
+    .oxford {
+        display: none;
+    }
+
+    .images-signup {
+        justify-content: center;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 1120px) {
+    .signup-page-content {
+        padding-top: 56px;
+        justify-content: center;
+    }
+
+    .signup-left {
+        width: min(100%, 760px);
+        padding: 32px 32px 0;
+        box-sizing: border-box;
+    }
+
+    .right-shaded-box {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .signup-left {
+        width: 100%;
+        padding: 28px 20px 0;
+    }
+
+    .inputs,
+    .top-inputs,
+    .bottom-inputs {
+        width: 100%;
+    }
+
+    .username,
+    .password {
+        width: 100%;
+    }
+
+    .username input,
+    .password input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .name-inputs {
+        flex-direction: column;
+        gap: 25px;
+        width: 100%;
+    }
+
+    .name-inputs input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 620px) {
+    .signup-page-content {
+        padding-top: 68px;
+    }
+
+    .signup-left {
+        padding: 22px 16px 0;
+    }
+
+    .bigUser {
+        width: 104px;
+    }
+
+    .inputs {
+        gap: 28px;
+        margin: 28px 0;
+    }
+
+    .top-inputs,
+    .bottom-inputs,
+    .name-inputs {
+        gap: 16px;
+    }
+
+    .username,
+    .password {
+        display: block;
+        width: 100%;
+    }
+
+    .username img,
+    .password img {
+        display: none;
+    }
+
+    .signup-left input {
+        width: 100%;
+        min-height: 54px;
+        padding: 14px 18px;
+        font-size: 17px;
+    }
+
+    .signup-btn {
+        width: min(100%, 220px);
+        margin-top: 12px;
+    }
 }

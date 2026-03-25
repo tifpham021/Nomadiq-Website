@@ -226,6 +226,14 @@ const ItineraryPage = () => {
     }
   };
 
+  const persistCurrentPageState = async () => {
+    const date = getDateTemp();
+
+    if (!date || !dayData[date]) return;
+
+    await saveItinerary();
+  };
+
   useEffect(() => {
     loadItinerary();
   }, [tripInfo, currentPage]);
@@ -259,9 +267,7 @@ const ItineraryPage = () => {
   const prevPage = async () => {
     if (currentPage === 0) return;
 
-    if (editing) {
-      await saveItinerary();
-    }
+    await persistCurrentPageState();
 
     setCurrentPage((prev) => prev - 1);
   };
@@ -269,9 +275,7 @@ const ItineraryPage = () => {
   const nextPage = async () => {
     if (currentPage >= tripLength - 1) return;
 
-    if (editing) {
-      await saveItinerary();
-    }
+    await persistCurrentPageState();
 
     setCurrentPage((prev) => prev + 1);
   };
@@ -489,7 +493,7 @@ const ItineraryPage = () => {
       <div className="right-boxes">
         <div className="map-box">
           <img src={map} className="map" alt="Map preview" />
-          <button type="button" onClick={() => navigate("/itinerary-map")}>
+          <button type="button">
             View More
           </button>
         </div>

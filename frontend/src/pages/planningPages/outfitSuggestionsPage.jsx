@@ -86,6 +86,27 @@ const saveStoredJson = (key, value) => {
 const normalizeText = (value = "") =>
   String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, " ");
 
+const getDisplayPieceLabel = (value = "") => {
+  const text = String(value).trim();
+
+  if (!text) return "";
+
+  const compacted = text
+    .replace(/\bmid-day\b/gi, "midday")
+    .replace(/\bwide leg\b/gi, "wide-leg")
+    .replace(/\bhigh rise\b/gi, "high-rise")
+    .replace(/\bslip on\b/gi, "slip-on")
+    .replace(/\bcross body\b/gi, "crossbody")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const words = compacted.split(" ");
+
+  const shortened = words.length <= 2 ? compacted : words.slice(-2).join(" ");
+
+  return shortened.charAt(0).toUpperCase() + shortened.slice(1);
+};
+
 const isAccessoryPiece = (piece = "") => {
   const normalized = normalizeText(piece);
 
@@ -1160,32 +1181,62 @@ const buildOutfitOptions = (slot, context) => {
     const pieces = useOnePiece
       ? [mainPiece, shoes, accessory, layer].filter(Boolean)
       : [top, bottom, shoes, accessory, layer].filter(Boolean);
+    const displayMainPiece = getDisplayPieceLabel(mainPiece);
+    const displayTop = getDisplayPieceLabel(top);
+    const displayBottom = getDisplayPieceLabel(bottom);
+    const displayPieces = pieces.map(getDisplayPieceLabel);
 
     const visualCandidates = useOnePiece
       ? [
-          { label: mainPiece, role: "main" },
-          { label: shoes, role: "shoes" },
-          { label: accessory, role: "accessory" },
-          { label: layer, role: "layer" },
+          { label: mainPiece, displayLabel: displayMainPiece, role: "main" },
+          {
+            label: shoes,
+            displayLabel: getDisplayPieceLabel(shoes),
+            role: "shoes",
+          },
+          {
+            label: accessory,
+            displayLabel: getDisplayPieceLabel(accessory),
+            role: "accessory",
+          },
+          {
+            label: layer,
+            displayLabel: getDisplayPieceLabel(layer),
+            role: "layer",
+          },
         ]
       : [
-          { label: top, role: "top" },
-          { label: bottom, role: "bottom" },
-          { label: shoes, role: "shoes" },
-          { label: accessory, role: "accessory" },
-          { label: layer, role: "layer" },
+          { label: top, displayLabel: displayTop, role: "top" },
+          { label: bottom, displayLabel: displayBottom, role: "bottom" },
+          {
+            label: shoes,
+            displayLabel: getDisplayPieceLabel(shoes),
+            role: "shoes",
+          },
+          {
+            label: accessory,
+            displayLabel: getDisplayPieceLabel(accessory),
+            role: "accessory",
+          },
+          {
+            label: layer,
+            displayLabel: getDisplayPieceLabel(layer),
+            role: "layer",
+          },
         ];
 
     const visualTokens = visualCandidates
       .filter((candidate) => candidate.label)
       .map((candidate) => ({
-        label: candidate.label,
+        label: candidate.displayLabel,
         icon: getPieceIcon(candidate.label),
         image: getPieceImage(candidate.label, filters.gender, candidate.role),
       }))
       .slice(0, 4);
 
-    const title = useOnePiece ? mainPiece : `${top} + ${bottom}`;
+    const title = useOnePiece
+      ? displayMainPiece
+      : `${displayTop} + ${displayBottom}`;
     const destinationName = tripInfo?.city || "your destination";
     const summary =
       slot === "dinner"
@@ -1208,6 +1259,7 @@ const buildOutfitOptions = (slot, context) => {
       title,
       summary,
       pieces,
+      displayPieces,
       visualTokens,
     };
   });
@@ -1265,14 +1317,6 @@ const OutfitCard = ({
     <div className="outfit-card-copy">
       <p className="outfit-title">{outfit.title}</p>
       <p className="outfit-summary">{outfit.summary}</p>
-
-      <div className="outfit-piece-pills">
-        {outfit.pieces.slice(0, 4).map((piece) => (
-          <span key={piece} className="outfit-piece-pill">
-            {piece}
-          </span>
-        ))}
-      </div>
     </div>
 
     <div className="outfit-card-footer">
@@ -1417,6 +1461,7 @@ const OutfitSuggestionsPage = () => {
     title: outfit.title,
     summary: outfit.summary,
     pieces: [...outfit.pieces],
+    displayPieces: [...(outfit.displayPieces || outfit.pieces)],
     visualTokens: outfit.visualTokens.map((token) => ({ ...token })),
     favoritedAt: new Date().toISOString(),
   });

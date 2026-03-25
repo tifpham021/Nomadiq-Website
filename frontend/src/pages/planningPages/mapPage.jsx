@@ -17,7 +17,9 @@ const MapPage = ({itinerary}) => {
       const storedPlan = JSON.parse(localStorage.getItem("plan"));
       if (storedPlan && storedPlan.city) {
         setLocation(
-          `${storedPlan.city}, ${storedPlan.state}, ${storedPlan.country}`
+          [storedPlan.city, storedPlan.state, storedPlan.country]
+            .filter(Boolean)
+            .join(", ")
         );
       }
     }, []);
@@ -40,12 +42,21 @@ const MapPage = ({itinerary}) => {
     if (!location || !mapboxToken) return;
     getCoordinates(location)
       .then(({ lat, lng }) => {
+        if (map.current) {
+          map.current.remove();
+        }
+
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
           style: "mapbox://styles/mapbox/streets-v11",
           center: [lng, lat],
-          zoom: 10,
+          zoom: 11,
         });
+
+        new mapboxgl.Marker({ color: "#5d99c9" })
+          .setLngLat([lng, lat])
+          .setPopup(new mapboxgl.Popup().setText(location))
+          .addTo(map.current);
 
         if (itinerary && itinerary.length > 0) {
           itinerary.forEach((loc) => {
@@ -57,10 +68,16 @@ const MapPage = ({itinerary}) => {
         }
       })
       .catch(console.error);
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
   }, [location, itinerary]);
     return (
       <div className="map-content">
-        <div ref={mapContainer} style={{ height: "100vh", width: "200vh" }} />
+        <div ref={mapContainer} className="map-container" />
         <button onClick={() => navigate("/plan-itinerary")}>Back</button>
       </div>
     );

@@ -172,16 +172,16 @@
 }
 
 .outfit-card {
-  min-height: 620px;
+  min-height: 600px;
   border-radius: 36px;
-  padding: 26px 22px 22px;
+  padding: 24px 22px 18px;
   box-sizing: border-box;
   background: rgba(223, 241, 250, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow: 0 14px 24px rgba(74, 108, 130, 0.18);
   display: grid;
-  grid-template-rows: auto 292px 158px auto;
-  gap: 16px;
+  grid-template-rows: auto 294px 104px auto;
+  gap: 12px;
 }
 
 .outfit-card h2 {
@@ -208,10 +208,10 @@
   z-index: 3;
   width: 58px;
   height: 58px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(116, 161, 192, 0.45);
   border-radius: 50%;
-  background: rgba(231, 245, 251, 0.82);
-  box-shadow: 0 8px 14px rgba(88, 119, 140, 0.18);
+  background: rgba(126, 176, 209, 0.9);
+  box-shadow: 0 8px 14px rgba(88, 119, 140, 0.2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -227,7 +227,7 @@
   width: 34px;
   height: 34px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%);
+  filter: brightness(0) invert(1);
 }
 
 .outfit-arrow-button--left {
@@ -240,8 +240,8 @@
 
 .outfit-arrow-button:hover {
   transform: translateY(-50%) scale(1.04);
-  background: rgba(245, 251, 255, 0.94);
-  box-shadow: 0 12px 18px rgba(88, 119, 140, 0.22);
+  background: rgba(104, 160, 198, 0.96);
+  box-shadow: 0 12px 18px rgba(88, 119, 140, 0.24);
 }
 
 .outfit-arrow-button:active {
@@ -255,22 +255,22 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
   align-content: stretch;
   align-items: stretch;
   justify-items: center;
-  padding: 8px 56px;
+  padding: 8px 52px;
   box-sizing: border-box;
   pointer-events: none;
 }
 
 .outfit-token {
   position: relative;
-  width: min(100%, 150px);
+  width: min(100%, 146px);
   min-height: 0;
   height: 100%;
   border-radius: 28px;
-  padding: 16px 14px;
+  padding: 14px 12px;
   box-sizing: border-box;
   display: grid;
   justify-items: center;
@@ -287,8 +287,8 @@
 }
 
 .outfit-token-image {
-  width: 68px;
-  height: 68px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
   display: block;
 }
@@ -343,18 +343,19 @@
 
 .outfit-card-copy {
   display: grid;
-  grid-template-rows: auto minmax(42px, auto) minmax(62px, 1fr);
+  grid-template-rows: auto minmax(42px, auto);
   align-content: start;
-  gap: 10px;
-  min-height: 158px;
+  gap: 6px;
+  min-height: 86px;
 }
 
 .outfit-title {
   margin: 0;
   text-align: center;
   font-family: "Noto Sans Thai", sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
+  line-height: 1.15;
   color: #08131c;
 }
 
@@ -366,30 +367,11 @@
   font-weight: 500;
   line-height: 1.35;
   color: rgba(13, 26, 37, 0.72);
-  min-height: 42px;
-}
-
-.outfit-piece-pills {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: flex-start;
-  gap: 8px;
-  min-height: 62px;
-}
-
-.outfit-piece-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
-  font-family: "Noto Sans Thai", sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: #0e1b25;
+  min-height: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .outfit-card-footer {
@@ -397,7 +379,7 @@
   align-items: center;
   gap: 16px;
   justify-content: center;
-  padding-top: 4px;
+  padding-top: 0;
 }
 
 .outfit-heart-button {
@@ -598,11 +580,10 @@
 
   .outfit-card-copy {
     min-height: 0;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
   }
 
-  .outfit-summary,
-  .outfit-piece-pills {
+  .outfit-summary {
     min-height: 0;
   }
 }

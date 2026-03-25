@@ -22,6 +22,11 @@ const parseStoredJson = (key) => {
 const normalizeText = (value = "") =>
   String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, " ");
 
+const capitalizeLabel = (value = "") => {
+  const text = String(value).trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+};
+
 const isAccessoryPiece = (piece = "") => {
   const normalized = normalizeText(piece);
 
@@ -172,23 +177,17 @@ const OutfitFavoritesPage = () => {
                         ) : (
                           <span className="outfit-token-icon">{token.icon}</span>
                         )}
-                        <span className="outfit-token-label">{token.label}</span>
+                        <span className="outfit-token-label">
+                          {capitalizeLabel(token.label)}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div className="favorite-outfit-copy">
-                  <h2>{favorite.title}</h2>
+                  <h2>{capitalizeLabel(favorite.title)}</h2>
                   <p>{favorite.summary}</p>
-
-                  <div className="outfit-piece-pills">
-                    {favorite.pieces?.map((piece) => (
-                      <span key={`${favorite.id}-${piece}`} className="outfit-piece-pill">
-                        {piece}
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="favorite-outfit-actions">

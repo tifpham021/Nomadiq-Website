@@ -14,6 +14,7 @@ const WeatherPage = () => {
 
     const [location, setLocation] = useState('');
     const [forecast, setForecast] = useState(null);
+    const [visibleDays, setVisibleDays] = useState(4);
     const navigate = useNavigate();
 
 
@@ -23,6 +24,27 @@ const WeatherPage = () => {
             setLocation(storedPlan.city);
             fetchWeather(storedPlan.city);
         }
+    }, []);
+
+    useEffect(() => {
+        const updateVisibleDays = () => {
+            if (window.innerWidth <= 720) {
+                setVisibleDays(1);
+                return;
+            }
+
+            if (window.innerWidth <= 1120) {
+                setVisibleDays(2);
+                return;
+            }
+
+            setVisibleDays(4);
+        };
+
+        updateVisibleDays();
+        window.addEventListener('resize', updateVisibleDays);
+
+        return () => window.removeEventListener('resize', updateVisibleDays);
     }, []);
 
     
@@ -73,7 +95,7 @@ const WeatherPage = () => {
                     <div className='arrow-weather-left'>
                         <img src={lArrow}/>
                     </div>
-                    {forecast?.forecast?.forecastday?.slice(0, 4).map((day, index) => {
+                    {forecast?.forecast?.forecastday?.slice(0, visibleDays).map((day, index) => {
                         const conditionText = day.day.condition.text.toLowerCase();
                         const temp = day.day.avgtemp_f;
                         let tempGradient= getGradientColor(temp);

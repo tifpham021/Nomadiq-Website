@@ -9,6 +9,13 @@
     font-family: 'Noto Sans Thai', serif;
 }
 
+.itinerary-wrapper button,
+.itinerary-wrapper input[type="text"] {
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 .heading {
     display: flex;
     margin: 10px 25px;
@@ -25,10 +32,16 @@
     background-color: #82BCD6;
     border-radius: 30px;
     font-size: 20px;
+    font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
     display: flex;
     align-self: center;
     padding: 10px 15px;
     box-shadow: 2px 2px 2px #51798b;
+    border: none;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
 }
 
 .heading button:hover {
@@ -105,16 +118,20 @@
     background-color: #a8cde6ba;
     border-radius: 50%;
     width: 75px;
-    height: 70px;
-    padding: 20px;
-    align-content: center;
+    height: 75px;
+    padding: 0;
     box-shadow: 2px 2px 2px #647a89ba;
     justify-content: center;
+    align-items: center;
+    display: flex;
+    border: none;
+    cursor: pointer;
 }
 
 .bottom-buttons img {
     width: 55px;
     height: 30px;
+    display: block;
 }
 
 .bottom-buttons .arrow:hover {
@@ -129,7 +146,11 @@
     border-radius: 35px;
     padding: 18px 25px;
     font-size: 21px;
+    font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
     box-shadow: 2px 3px 2px #374752ba;
+    border: none;
+    cursor: pointer;
 }
 
 .bottom-buttons button:hover {
@@ -182,8 +203,12 @@
     padding: 12px;
     margin: 0 15px 15px;
     width: calc(100% - 30px);
-    font-size: 25px;
+    font-size: 20px;
+    font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
     box-shadow: 2px 2px 2px #bcc5cd;
+    border: none;
+    cursor: pointer;
 }
 
 .map-box button:hover {
@@ -255,8 +280,11 @@
     align-items: center;
     padding: 0;
     font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
     margin: 0;
     box-shadow: 2px 2px 2px #bcc5cd;
+    border: none;
+    cursor: pointer;
 }
 
 .plus:hover {
@@ -276,7 +304,10 @@
     font-size: 22px;
     padding: 10px 15px;
     font-family: 'Noto Sans Thai', serif;
+    font-weight: 700;
     box-shadow: 2px 2px 2px #bcc5cd;
+    border: none;
+    cursor: pointer;
 }
 
 .view-more:hover {
@@ -295,6 +326,8 @@
     background-color: #619cb8;
     border-radius: 40px;
     box-shadow: 2px 2px 2px #33505d;
+    border: none;
+    cursor: pointer;
 }
 
 .editing-buttons button:hover {
@@ -310,7 +343,7 @@
 .check-box-inputs {
   display: flex;
   align-items: center;
-  margin: 10px 18px;
+  margin: 10px 18px 10px 32px;
   gap: 2px;
 }
 
@@ -318,23 +351,47 @@
   cursor: pointer;
   height: 22px;
   margin: 0 6px 0 0;
+  width: 22px;
+  accent-color: #6fa9c8;
+  -webkit-appearance: checkbox;
+  appearance: auto;
+  border-radius: 4px;
 }
 
 .check-box-time {
   font-size: 14px;
   border: none;
   width: 80px;
-  padding: 6px 8px;
+  padding: 8px 10px;
   font-weight: bold;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.68);
+  box-shadow: inset 0 0 0 1px rgba(112, 160, 184, 0.26);
+  color: #24404d;
 }
 
 .check-box-text {
   font-weight: bold;
   font-size: 16px;
   border: none;
-  padding: 6px 8px;
+  padding: 8px 10px;
   font-size: 14px;
   width: 190px;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.68);
+  box-shadow: inset 0 0 0 1px rgba(112, 160, 184, 0.26);
+  color: #24404d;
+}
+
+.check-box-time:focus,
+.check-box-text:focus,
+.heading button:focus,
+.bottom-buttons button:focus,
+.map-box button:focus,
+.plus:focus,
+.view-more:focus,
+.editing-buttons button:focus {
+    box-shadow: 0 0 0 3px rgba(145, 196, 222, 0.34);
 }
 
 .generate-error {
