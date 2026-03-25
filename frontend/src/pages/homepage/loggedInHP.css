@@ -16,6 +16,10 @@
     font-size: clamp(5.5rem, 8vw, 8rem);
     font-family: 'Alegreya SC', serif;
     font-weight: 700;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
 }
 
 .descript-text-lp {
@@ -28,3 +32,25 @@
     margin-top: -10%;
 }
 
+@media (max-width: 1024px) {
+    .logged-in-homepage-wrapper .images {
+        display: none;
+    }
+
+    .logged-in-home-part {
+        justify-content: center;
+    }
+
+    .logged-in-text-on-left {
+        max-width: 100%;
+        text-align: center;
+        margin-top: 0;
+    }
+
+    .logged-in-homepage-wrapper .top-text-lp,
+    .logged-in-homepage-wrapper .main-text-lp,
+    .logged-in-homepage-wrapper .descript-text-lp {
+        justify-content: center;
+        text-align: center;
+    }
+}

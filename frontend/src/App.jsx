@@ -15,6 +15,15 @@ import WeatherPage from './pages/planningPages/weatherPage.jsx';
 import ItineraryPage from './pages/planningPages/itineraryPage.jsx';
 import MapPage from './pages/planningPages/mapPage.jsx';
 import FlightTrackerPage from "./pages/planningPages/flightTrackerPage.jsx";
+import FlightsTransportationPage from "./pages/planningPages/flightsTransportationPage.jsx";
+import AccomodationsPage from "./pages/planningPages/accomodationsPage.jsx";
+import ActivitiesExperiencesPage from "./pages/planningPages/activitiesExperiencesPage.jsx";
+import ProfilePage from "./pages/planningPages/profilePage.jsx";
+import LearnMorePage from "./pages/planningPages/learnMorePage.jsx";
+import PackingListPage from "./pages/planningPages/packingListPage.jsx";
+import PackingListDetailPage from "./pages/planningPages/packingListDetailPage.jsx";
+import OutfitSuggestionsPage from "./pages/planningPages/outfitSuggestionsPage.jsx";
+import OutfitFavoritesPage from "./pages/planningPages/outfitFavoritesPage.jsx";
 
 function App() {
   const location = useLocation();
@@ -43,6 +52,15 @@ function App() {
         <Route path="/plan-itinerary" element={<ItineraryPage />} />
         <Route path="/itinerary-map" element={<MapPage />} />
         <Route path="/track-flight" element={<FlightTrackerPage />} />
+        <Route path="/flights-transportation" element={<FlightsTransportationPage />} />
+        <Route path="/accomodations" element={<AccomodationsPage />} />
+        <Route path="/activities-experiences" element={<ActivitiesExperiencesPage />} />
+        <Route path="/my-account" element={<ProfilePage />} />
+        <Route path="/learn-more" element={<LearnMorePage />} />
+        <Route path="/packing-list" element={<PackingListPage />} />
+        <Route path="/packing-list/:categoryKey" element={<PackingListDetailPage />} />
+        <Route path="/outfit-suggestions" element={<OutfitSuggestionsPage />} />
+        <Route path="/outfit-suggestions/favorites" element={<OutfitFavoritesPage />} />
       </Routes>
       {!hideNavAndFooter && <Footer />}
     </>

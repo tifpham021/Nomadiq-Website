@@ -80,12 +80,12 @@ const WeatherPage = () => {
 
                         if (conditionText==="sunny" || conditionText==="clear") {
                             icon = sun;
+                        } else if (conditionText.includes("thunder") || conditionText.includes("storm")) {
+                            icon = thunder;
                         } else if (conditionText.includes("rain")) {
                             icon = rain;
                         } else if (conditionText==="windy") {
                             icon = wind;
-                        } else if (conditionText ==="thunderstorm") {
-                            icon = thunder;
                         }
                         return (
                         <div>

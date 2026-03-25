@@ -31,6 +31,80 @@ app.use(
 const apiKey = process.env.VITE_WEATHER_API_KEY;
 const days = 5;
 
+const formatDestination = ({ city, state, country }) =>
+  [city, state, country].filter(Boolean).join(", ");
+
+const getTripDates = (arrival, departure) => {
+  const start = new Date(arrival);
+  const end = new Date(departure);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return [];
+  }
+
+  const dates = [];
+  const current = new Date(start);
+
+  while (current < end) {
+    dates.push(current.toISOString().split("T")[0]);
+    current.setDate(current.getDate() + 1);
+  }
+
+  if (dates.length === 0) {
+    dates.push(start.toISOString().split("T")[0]);
+  }
+
+  return dates;
+};
+
+const sanitizeBoxes = (boxes = []) =>
+  boxes
+    .slice(0, 4)
+    .map((box) => ({
+      checked: Boolean(box?.checked),
+      time: typeof box?.time === "string" ? box.time.trim() : "",
+      activity: typeof box?.activity === "string" ? box.activity.trim() : "",
+    }))
+    .filter((box) => box.time || box.activity);
+
+const normalizeGeneratedDays = (generatedDays = [], itineraryDates = []) =>
+  itineraryDates.reduce((acc, date, index) => {
+    const matchingDay =
+      generatedDays.find((day) => day?.date === date) || generatedDays[index] || {};
+
+    acc[date] = {
+      dayBoxes: sanitizeBoxes(matchingDay.dayBoxes || []),
+      nightBoxes: sanitizeBoxes(matchingDay.nightBoxes || []),
+    };
+
+    return acc;
+  }, {});
+
+const buildWeatherSummary = (forecastData, itineraryDates) => {
+  const forecastByDate = new Map(
+    (forecastData?.forecast?.forecastday || []).map((forecastDay) => [
+      forecastDay.date,
+      forecastDay,
+    ])
+  );
+
+  return itineraryDates.map((date) => {
+    const forecastDay = forecastByDate.get(date);
+
+    if (!forecastDay) {
+      return {
+        date,
+        summary: "Forecast unavailable. Use typical seasonal expectations for this destination.",
+      };
+    }
+
+    return {
+      date,
+      summary: `${forecastDay.day.condition.text}, average ${forecastDay.day.avgtemp_f}F, high ${forecastDay.day.maxtemp_f}F, low ${forecastDay.day.mintemp_f}F, rain chance ${forecastDay.day.daily_chance_of_rain}%. Sunrise ${forecastDay.astro.sunrise}, sunset ${forecastDay.astro.sunset}.`,
+    };
+  });
+};
+
 app.get("/api/weather", async (req, res) => {
   const city = req.query.city;
 
@@ -148,6 +222,7 @@ app.post("/api/login", async (req, res) => {
       message: "Login successful",
       user: {
         id: user._id,
+        name: user.name,
         username: user.username,
         email: user.email,
       },
@@ -337,31 +412,125 @@ app.get("/api/plan-itinerary", async (req, res) => {
 });
 
 app.post("/api/generate-itinerary", async (req, res) => {
-  const { destination, startDate, endDate } = req.body;
+  const { userId, tripInfo } = req.body;
 
   try {
-    if (!destination || !startDate || !endDate) {
-      return res.status(400).json({ error: "Missing destination or dates" });
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "OpenAI API key is not configured" });
+    }
+
+    if (!userId || !tripInfo?.city || !tripInfo?.country || !tripInfo?.date?.arrival || !tripInfo?.date?.departure) {
+      return res.status(400).json({ error: "Missing trip details" });
+    }
+
+    const destination = formatDestination(tripInfo);
+    const itineraryDates = getTripDates(
+      tripInfo.date.arrival,
+      tripInfo.date.departure
+    );
+
+    if (itineraryDates.length === 0) {
+      return res.status(400).json({ error: "Trip dates are invalid" });
+    }
+
+    let weatherSummary = [];
+
+    if (apiKey) {
+      const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${encodeURIComponent(destination)}&days=${Math.min(Math.max(itineraryDates.length, 1), days)}`;
+      const weatherResponse = await fetch(forecastUrl);
+
+      if (weatherResponse.ok) {
+        const weatherData = await weatherResponse.json();
+        weatherSummary = buildWeatherSummary(weatherData, itineraryDates);
+      }
     }
 
     const prompt = `
-      Create a detailed day-by-day travel itinerary for a trip to ${destination}
-      from ${startDate} to ${endDate}.
-      Include recommended activities, places to eat, and sightseeing, as well as times for those events.
-    `;
+Return valid JSON only with this shape:
+{
+  "days": [
+    {
+      "date": "YYYY-MM-DD",
+      "dayBoxes": [
+        { "checked": false, "time": "9:00 AM", "activity": "string" }
+      ],
+      "nightBoxes": [
+        { "checked": false, "time": "6:30 PM", "activity": "string" }
+      ]
+    }
+  ]
+}
+
+Create a trip itinerary for:
+- Destination: ${destination}
+- Arrival date: ${tripInfo.date.arrival}
+- Departure date: ${tripInfo.date.departure}
+- Transportation: ${tripInfo.transportation || "Not specified"}
+- Dates to fill exactly: ${itineraryDates.join(", ")}
+
+Weather context by date:
+${weatherSummary.length > 0 ? weatherSummary.map((day) => `- ${day.date}: ${day.summary}`).join("\n") : "- Weather forecast unavailable. Use reasonable assumptions for the destination and season."}
+
+Rules:
+- Return one object per listed date, in the same order.
+- Put daytime activities in "dayBoxes" and evening activities in "nightBoxes".
+- Include 2 to 4 boxes in each section.
+- Keep "checked" false for every item.
+- Use concise activity text that fits a UI input box.
+- Use specific times.
+- Prefer realistic tourist activities, meals, neighborhoods, landmarks, and weather-aware suggestions.
+- Do not include markdown or any text outside the JSON object.
+`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a travel planner that returns strict JSON for a trip itinerary UI.",
+        },
+        { role: "user", content: prompt },
+      ],
       temperature: 0.7,
     });
 
-    const itinerary = completion.choices[0].message.content;
-    res.json({ itinerary });
+    const content = completion.choices[0].message.content;
+    const parsed = JSON.parse(content || "{}");
+    const itineraryByDate = normalizeGeneratedDays(
+      parsed.days || [],
+      itineraryDates
+    );
+
+    const hasGeneratedActivities = Object.values(itineraryByDate).some(
+      (day) => day.dayBoxes.length > 0 || day.nightBoxes.length > 0
+    );
+
+    if (!hasGeneratedActivities) {
+      return res.status(500).json({ error: "Generated itinerary was empty" });
+    }
+
+    await Promise.all(
+      itineraryDates.map((date) =>
+        Itinerary.findOneAndUpdate(
+          { userId, date },
+          {
+            userId,
+            date,
+            dayBoxes: itineraryByDate[date].dayBoxes,
+            nightBoxes: itineraryByDate[date].nightBoxes,
+          },
+          { new: true, upsert: true, setDefaultsOnInsert: true }
+        )
+      )
+    );
+
+    res.json({ itineraryByDate });
   } catch (error) {
-  console.error("OpenAI error:", error);
-  res.status(500).json({ error: "Failed to generate itinerary" });
-}
+    console.error("OpenAI error:", error);
+    res.status(500).json({ error: "Failed to generate itinerary" });
+  }
 });
 
 connectDB();

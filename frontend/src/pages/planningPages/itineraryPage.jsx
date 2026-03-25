@@ -1,514 +1,531 @@
-import '../planningPages/itineraryPage.css';
-import background from '../../assets/planning-img/itinerary.png';
-import lArrow from '../../assets/planning-img/left-arrow.png';
-import rArrow from '../../assets/planning-img/right-arrow.png';
-import map from '../../assets/planning-img/map.png';
-import add from '../../assets/planning-img/add.png';
-import trash from '../../assets/planning-img/trash.png';
-import {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import "../planningPages/itineraryPage.css";
+import background from "../../assets/planning-img/itinerary.png";
+import lArrow from "../../assets/planning-img/left-arrow.png";
+import rArrow from "../../assets/planning-img/right-arrow.png";
+import map from "../../assets/planning-img/map.png";
+import add from "../../assets/planning-img/add.png";
+import trash from "../../assets/planning-img/trash.png";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getDestinationSuggestions } from "./destinationSuggestions.js";
+
+const MAX_BOXES = 4;
+
+const formatTimeValue = (value = "") => {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+
+  const hourMinuteMatch = trimmed.match(/^(\d{1,2})(?::(\d{0,2}))?$/);
+  if (hourMinuteMatch) {
+    const hour = Number.parseInt(hourMinuteMatch[1], 10);
+    if (Number.isNaN(hour)) return trimmed;
+
+    const minute = (hourMinuteMatch[2] || "00").padEnd(2, "0").slice(0, 2);
+    return `${hour}:${minute}`;
+  }
+
+  const digitsOnly = trimmed.replace(/\D/g, "");
+
+  if (/^\d{3,4}$/.test(digitsOnly)) {
+    const hourPart =
+      digitsOnly.length === 3 ? digitsOnly.slice(0, 1) : digitsOnly.slice(0, 2);
+    const minutePart =
+      digitsOnly.length === 3 ? digitsOnly.slice(1) : digitsOnly.slice(2);
+    const hour = Number.parseInt(hourPart, 10);
+
+    if (Number.isNaN(hour)) return trimmed;
+
+    return `${hour}:${minutePart.padEnd(2, "0").slice(0, 2)}`;
+  }
+
+  if (/^\d{1,2}$/.test(digitsOnly)) {
+    const hour = Number.parseInt(digitsOnly, 10);
+    if (Number.isNaN(hour)) return trimmed;
+
+    return `${hour}:00`;
+  }
+
+  return trimmed;
+};
+
+const normalizeBoxes = (boxes = []) =>
+  boxes
+    .map((box) => ({
+      time: formatTimeValue(box?.time || ""),
+      activity: box?.activity?.trim() || "",
+      checked: Boolean(box?.checked),
+    }))
+    .filter((box) => box.time || box.activity)
+    .slice(0, MAX_BOXES);
+
 const ItineraryPage = () => {
-    const [tripInfo, setTripInfo] = useState(null);
-    const [tripLength, setTripLength] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [editing, setEditing] = useState(false);
-    const [dayData, setDayData] = useState({});
-    const navigate = useNavigate();
-    const MAX_BOXES = 4;
+  const [tripInfo, setTripInfo] = useState(null);
+  const [tripLength, setTripLength] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [editing, setEditing] = useState(false);
+  const [dayData, setDayData] = useState({});
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState("");
+  const [suggestionIndex, setSuggestionIndex] = useState(0);
+  const navigate = useNavigate();
+  const suggestions = getDestinationSuggestions(tripInfo);
+  const featuredSuggestion =
+    suggestions[suggestionIndex % Math.max(suggestions.length, 1)];
 
-    const handleAddBoxDay = () => {
-        if (currentDayBoxes.length >= MAX_BOXES) return;
-        const newBoxes = [...currentDayBoxes, { time: '', activity: '', checked: false }];
-        updateDayBoxes(newBoxes);
-    };
+  const getUserId = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    return storedUser?._id || storedUser?.id || "";
+  };
 
-    const handleAddBoxNight = () => {
-        if (currentNightBoxes.length >= MAX_BOXES) return;
-        const newBoxes = [...currentNightBoxes, { time: '', activity: '', checked: false }];
-        updateNightBoxes(newBoxes);
-    };
+  const getDateTemp = () => {
+    if (!tripInfo?.date?.arrival) return "";
 
-    const handleDeleteLastDayBox = () => {
-        const newBoxes = currentDayBoxes.slice(0, -1);
-        updateDayBoxes(newBoxes);
-    };
+    const startDate = new Date(tripInfo.date.arrival);
+    startDate.setDate(startDate.getDate() + currentPage);
+    return startDate.toISOString().split("T")[0];
+  };
 
-    const handleDeleteLastNightBox = () => {
-        const newBoxes = currentNightBoxes.slice(0, -1);
-        updateNightBoxes(newBoxes);
-    };
+  const updateDayBoxes = (newBoxes) => {
+    const dateKey = getDateTemp();
+    if (!dateKey) return;
 
-    const getDateTemp = () => {
-        if (!tripInfo) return '';
-        const startDate = new Date(tripInfo.date.arrival);
-        startDate.setDate(startDate.getDate() + currentPage);
-        return startDate.toISOString().split('T')[0];
-    }
-
-    const updateDayBoxes = (newBoxes) => {
-    setDayData(prev => ({
-        ...prev,
-        [getDateTemp()]: {
-        ...(prev[getDateTemp()] || {}),
-        dayBoxes: newBoxes
-        }
+    setDayData((prev) => ({
+      ...prev,
+      [dateKey]: {
+        ...(prev[dateKey] || {}),
+        dayBoxes: newBoxes.slice(0, MAX_BOXES),
+      },
     }));
-    };
+  };
 
-    const updateNightBoxes = (newBoxes) => {
-    setDayData(prev => ({
-        ...prev,
-        [getDateTemp()]: {
-        ...(prev[getDateTemp()] || {}),
-        nightBoxes: newBoxes
-        }
+  const updateNightBoxes = (newBoxes) => {
+    const dateKey = getDateTemp();
+    if (!dateKey) return;
+
+    setDayData((prev) => ({
+      ...prev,
+      [dateKey]: {
+        ...(prev[dateKey] || {}),
+        nightBoxes: newBoxes.slice(0, MAX_BOXES),
+      },
     }));
-    };
+  };
 
-    useEffect(() => {
-        const storedPlan = JSON.parse(localStorage.getItem("plan"));
-        console.log("Stored Plan:", storedPlan);
-        if (storedPlan){
-            setTripInfo(storedPlan);
-        }
-
-    }, []);
-
-    useEffect(() => {
-        if (tripInfo?.date?.arrival && tripInfo?.date?.departure) {
-        const start = new Date(tripInfo.date.arrival);
-        const end = new Date(tripInfo.date.departure);
-        const diffInTime = end - start;
-        const diffInDays = Math.ceil(diffInTime / (1000 * 60 * 60 * 24));
-        console.log("Trip length (days):", diffInDays);
-        setTripLength(diffInDays);
-        }
-    }, [tripInfo])
-
-
-    const prevPage = async () => {
-        if (currentPage > 0) {
-            if (editing) await saveItinerary();
-            setCurrentPage((prev) => (prev - 1));
-        }
-    };
-
-    const nextPage = async () => {
-        if (currentPage < tripLength - 1) {
-            if (editing) await saveItinerary();
-            setCurrentPage((prev) => (prev + 1));
-        }
+  useEffect(() => {
+    const storedPlan = JSON.parse(localStorage.getItem("plan"));
+    if (storedPlan) {
+      setTripInfo(storedPlan);
     }
+  }, []);
 
-    const getDateForPage = () => {
-        if (!tripInfo) return '';
-        const startDate = new Date(tripInfo.date.arrival);
-        const currentDate = new Date(startDate);
-        currentDate.setDate(startDate.getDate() + currentPage);
+  useEffect(() => {
+    if (!tripInfo?.date?.arrival || !tripInfo?.date?.departure) return;
 
-        const formatted = currentDate.toLocaleDateString("en-US", {
-            weekday: "long",
-            month: "long",
-            day: "numeric"
-        });
-        return formatted;
-    };
+    const start = new Date(tripInfo.date.arrival);
+    const end = new Date(tripInfo.date.departure);
+    const diffInTime = end - start;
+    const diffInDays = Math.ceil(diffInTime / (1000 * 60 * 60 * 24));
 
-    const currentDayBoxes = dayData[getDateTemp()]?.dayBoxes || [];
-    const currentNightBoxes = dayData[getDateTemp()]?.nightBoxes || [];
+    setTripLength(Math.max(1, diffInDays));
+  }, [tripInfo]);
 
+  useEffect(() => {
+    setSuggestionIndex(0);
+  }, [tripInfo]);
 
-        const loadItinerary = async () => {
-            if (!tripInfo) return;
-            try {
-            const date = getDateTemp();
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userId = user?._id || user?.id;
-            
-            if (!userId) {
-                console.error("No user logged in");
-                return;
-            }
+  const getDateForPage = () => {
+    if (!tripInfo?.date?.arrival) return "";
 
-            const res = await fetch(`http://localhost:3000/api/plan-itinerary?userId=${userId}&date=${date}`);
-            
-            if (!res.ok) {
-                console.error("Failed to load itinerary");
-                return;
-            }
+    const startDate = new Date(tripInfo.date.arrival);
+    const currentDate = new Date(startDate);
+    currentDate.setDate(startDate.getDate() + currentPage);
 
-            const data = await res.json();
-            console.log("Response from load:", data);
+    return currentDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
-            setDayData(prev => ({
-            ...prev,
-            [date]: {
-                dayBoxes: data.dayBoxes || [],
-                nightBoxes: data.nightBoxes || []
-            }
-            }));
+  const currentDateKey = getDateTemp();
+  const currentDayBoxes = dayData[currentDateKey]?.dayBoxes || [];
+  const currentNightBoxes = dayData[currentDateKey]?.nightBoxes || [];
 
-            } catch (err) {
-            console.error('No itinerary found for this date:', err);
-            }
-        };
+  const loadItinerary = async () => {
+    if (!tripInfo) return;
 
-        const saveItinerary = async () => {
-        if (!tripInfo) return;
+    const date = getDateTemp();
+    const userId = getUserId();
 
-        try {
-            const date = getDateTemp();
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userId = user?._id || user?.id;
+    if (!date || !userId) return;
 
-            if (!userId) {
-            console.error("No user logged in");
-            return;
-            }
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/plan-itinerary?userId=${userId}&date=${date}`
+      );
 
-            const payload = {
-            userId,
-            date,
-            dayBoxes: dayData[date]?.dayBoxes || [],
-            nightBoxes: dayData[date]?.nightBoxes || []
-            };
-
-            const res = await fetch('http://localhost:3000/api/plan-itinerary', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-            });
-
-            const data = await res.json();
-            console.log("Saved:", data);
-
-            if (data) {
-                setDayData(prev => ({
-                    ...prev,
-                    [date]: {
-                        dayBoxes: data.dayBoxes || [],
-                        nightBoxes: data.nightBoxes || []
-                    }
-                }));
-            }
-            await loadItinerary();
-        } catch (err) {
-            console.error('Failed to save itinerary:', err);
+      if (!res.ok) {
+        if (res.status !== 404) {
+          console.error("Failed to load itinerary");
         }
-    };
-
-        useEffect(() => {
-            loadItinerary();
-        }, [tripInfo, currentPage]);
-
-    const destination = localStorage.getItem("destination");
-    const startDate = localStorage.getItem("startDate");
-    const endDate = localStorage.getItem("endDate");
-    const [generatedItinerary, setGeneratedItinerary] = useState("");
-    const testDestination = "Paris";
-    const testStartDate = "2025-08-10";
-    const testEndDate = "2025-08-15";
-
-    const handleGenerate = async () => {
-        console.log({ testDestination, testStartDate, testEndDate });
-      console.log("Generating itinerary...");
-      try {
-        const res = await fetch("http://localhost:3000/api/generate-itinerary", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            destination: testDestination,
-            startDate: testStartDate,
-            endDate: testEndDate,
-          }),
-        });
-        const data = await res.json();
-        console.log("Response data:", data);
-        if (data.itinerary) {
-          setGeneratedItinerary(data.itinerary);
-        } else {
-          setGeneratedItinerary("No itinerary generated.");
-        }
-      } catch (error) {
-        console.error("Failed to generate itinerary:", error);
-        setGeneratedItinerary("Error generating itinerary.");
+        return;
       }
-    };
 
+      const data = await res.json();
 
-    return (
-      <div
-        className="itinerary-wrapper"
-        style={{
-          background: `url(${background})`,
+      setDayData((prev) => ({
+        ...prev,
+        [date]: {
+          dayBoxes: normalizeBoxes(data.dayBoxes),
+          nightBoxes: normalizeBoxes(data.nightBoxes),
+        },
+      }));
+    } catch (err) {
+      console.error("No itinerary found for this date:", err);
+    }
+  };
 
-          backgroundPosition: "center",
-          height: "87.5vh",
-          width: "100vw",
-        }}
-      >
-        <div className="left-boxes">
-          <div className="heading">
-            <h1 className="day" style={{ textTransform: "uppercase" }}>
-              DAY {currentPage + 1}: {getDateForPage()}
-            </h1>
-            <button
-              className="editing-button"
-              type="submit"
-              onClick={async () => {
-                if (editing) await saveItinerary();
-                setEditing((prev) => !prev);
-              }}
-            >
-              {" "}
-              {editing ? "SAVE" : "EDIT"}
-            </button>
-          </div>
-          {editing ? (
-            <div className="itinerary">
-              <div className="planning-boxes">
-                <div className="planning-box1">
-                  <h2>Day Time</h2>
-                  {currentDayBoxes.map((box, index) => (
-                    <div className="check-box-inputs" key={index}>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={box.checked}
-                        onChange={(e) => {
-                          const newBoxes = [...currentDayBoxes];
-                          newBoxes[index].checked = e.target.checked;
-                          updateDayBoxes(newBoxes);
-                        }}
-                      />
-                      <input
-                        type="text"
-                        className="check-box-time"
-                        placeholder="Time..."
-                        value={box.time || ""}
-                        onChange={(e) => {
-                          const newBoxes = [...currentDayBoxes];
-                          newBoxes[index].time = e.target.value;
-                          updateDayBoxes(newBoxes);
-                        }}
-                      />
-                      <input
-                        type="text"
-                        className="check-box-text"
-                        placeholder="Enter activity..."
-                        value={box.activity}
-                        onChange={(e) => {
-                          const newBoxes = [...currentDayBoxes];
-                          newBoxes[index].activity = e.target.value;
-                          updateDayBoxes(newBoxes);
-                        }}
-                      />
-                    </div>
-                  ))}
+  const saveItinerary = async () => {
+    if (!tripInfo) return;
 
-                  <div className="editing-buttons">
-                    <button onClick={handleAddBoxDay}>
-                      <img src={add} />
-                    </button>
-                    <button onClick={handleDeleteLastDayBox}>
-                      <img src={trash} />
-                    </button>
-                  </div>
-                </div>
-                <div className="planning-box2">
-                  <h2>Night Time</h2>
-                  {currentNightBoxes.map((box, index) => (
-                    <div className="check-box-inputs" key={index}>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={box.checked}
-                        onChange={(e) => {
-                          const newBoxes = [...currentNightBoxes];
-                          newBoxes[index].checked = e.target.checked;
-                          updateNightBoxes(newBoxes);
-                        }}
-                      />
-                      <input
-                        type="text"
-                        className="check-box-time"
-                        placeholder="Time..."
-                        value={box.time || ""}
-                        onChange={(e) => {
-                          const newBoxes = [...currentNightBoxes];
-                          newBoxes[index].time = e.target.value;
-                          updateNightBoxes(newBoxes);
-                        }}
-                      />
-                      <input
-                        type="text"
-                        className="check-box-text"
-                        placeholder="Enter activity..."
-                        value={box.activity}
-                        onChange={(e) => {
-                          const newBoxes = [...currentNightBoxes];
-                          newBoxes[index].activity = e.target.value;
-                          updateNightBoxes(newBoxes);
-                        }}
-                      />
-                    </div>
-                  ))}
-                  <div className="editing-buttons">
-                    <button onClick={handleAddBoxNight}>
-                      <img src={add} />
-                    </button>
-                    <button onClick={handleDeleteLastNightBox}>
-                      <img src={trash} />
-                    </button>
-                  </div>
+    const date = getDateTemp();
+    const userId = getUserId();
+
+    if (!date || !userId) return;
+
+    try {
+      const sanitizedDayBoxes = normalizeBoxes(dayData[date]?.dayBoxes);
+      const sanitizedNightBoxes = normalizeBoxes(dayData[date]?.nightBoxes);
+
+      setDayData((prev) => ({
+        ...prev,
+        [date]: {
+          ...(prev[date] || {}),
+          dayBoxes: sanitizedDayBoxes,
+          nightBoxes: sanitizedNightBoxes,
+        },
+      }));
+
+      const payload = {
+        userId,
+        date,
+        dayBoxes: sanitizedDayBoxes,
+        nightBoxes: sanitizedNightBoxes,
+      };
+
+      await fetch("http://localhost:3000/api/plan-itinerary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Failed to save itinerary:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadItinerary();
+  }, [tripInfo, currentPage]);
+
+  const handleAddBoxDay = () => {
+    if (currentDayBoxes.length >= MAX_BOXES) return;
+
+    updateDayBoxes([
+      ...currentDayBoxes,
+      { time: "", activity: "", checked: false },
+    ]);
+  };
+
+  const handleAddBoxNight = () => {
+    if (currentNightBoxes.length >= MAX_BOXES) return;
+
+    updateNightBoxes([
+      ...currentNightBoxes,
+      { time: "", activity: "", checked: false },
+    ]);
+  };
+
+  const handleDeleteLastDayBox = () => {
+    updateDayBoxes(currentDayBoxes.slice(0, -1));
+  };
+
+  const handleDeleteLastNightBox = () => {
+    updateNightBoxes(currentNightBoxes.slice(0, -1));
+  };
+
+  const prevPage = async () => {
+    if (currentPage === 0) return;
+
+    if (editing) {
+      await saveItinerary();
+    }
+
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  const nextPage = async () => {
+    if (currentPage >= tripLength - 1) return;
+
+    if (editing) {
+      await saveItinerary();
+    }
+
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const handleGenerate = async () => {
+    if (!tripInfo) {
+      setGenerateError("Trip details were not found.");
+      return;
+    }
+
+    const userId = getUserId();
+
+    if (!userId) {
+      setGenerateError("Please log in before generating an itinerary.");
+      return;
+    }
+
+    setIsGenerating(true);
+    setGenerateError("");
+
+    try {
+      const res = await fetch("http://localhost:3000/api/generate-itinerary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          tripInfo,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to generate itinerary.");
+      }
+
+      if (!data.itineraryByDate) {
+        throw new Error("No itinerary was returned.");
+      }
+
+      const normalizedItineraryByDate = Object.fromEntries(
+        Object.entries(data.itineraryByDate).map(([dateKey, itinerary]) => [
+          dateKey,
+          {
+            dayBoxes: normalizeBoxes(itinerary?.dayBoxes),
+            nightBoxes: normalizeBoxes(itinerary?.nightBoxes),
+          },
+        ])
+      );
+
+      setDayData((prev) => ({
+        ...prev,
+        ...normalizedItineraryByDate,
+      }));
+    } catch (error) {
+      console.error("Failed to generate itinerary:", error);
+      setGenerateError(error.message || "Failed to generate itinerary.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const renderPlanningInputs = (boxes, updateBoxes, readOnly = false) =>
+    boxes.map((box, index) => (
+      <div className="check-box-inputs" key={index}>
+        <input
+          type="checkbox"
+          className="checkbox"
+          checked={box.checked}
+          onChange={(e) => {
+            const newBoxes = [...boxes];
+            newBoxes[index].checked = e.target.checked;
+            updateBoxes(newBoxes);
+          }}
+        />
+        <input
+          type="text"
+          className="check-box-time"
+          placeholder="Time..."
+          value={box.time || ""}
+          readOnly={readOnly}
+          onChange={(e) => {
+            const newBoxes = [...boxes];
+            newBoxes[index].time = e.target.value;
+            updateBoxes(newBoxes);
+          }}
+          onBlur={(e) => {
+            if (readOnly) return;
+
+            const formattedTime = formatTimeValue(e.target.value);
+            if (formattedTime === (box.time || "")) return;
+
+            const newBoxes = [...boxes];
+            newBoxes[index].time = formattedTime;
+            updateBoxes(newBoxes);
+          }}
+        />
+        <input
+          type="text"
+          className="check-box-text"
+          placeholder="Enter activity..."
+          value={box.activity || ""}
+          readOnly={readOnly}
+          onChange={(e) => {
+            const newBoxes = [...boxes];
+            newBoxes[index].activity = e.target.value;
+            updateBoxes(newBoxes);
+          }}
+        />
+      </div>
+    ));
+
+  const renderBottomButtons = () => (
+    <>
+      <div className="bottom-buttons">
+        <button
+          className="arrow"
+          type="button"
+          onClick={prevPage}
+          disabled={currentPage === 0 || isGenerating}
+        >
+          <img src={lArrow} alt="Previous day" />
+        </button>
+        <button type="button" onClick={handleGenerate} disabled={isGenerating}>
+          {isGenerating ? "GENERATING..." : "GENERATE ME ONE"}
+        </button>
+        <button
+          className="arrow"
+          type="button"
+          onClick={nextPage}
+          disabled={currentPage === tripLength - 1 || isGenerating}
+        >
+          <img src={rArrow} alt="Next day" />
+        </button>
+      </div>
+      {generateError ? <p className="generate-error">{generateError}</p> : null}
+    </>
+  );
+
+  return (
+    <div
+      className="itinerary-wrapper"
+      style={{
+        background: `url(${background})`,
+        backgroundPosition: "center",
+        height: "87.5vh",
+        width: "100vw",
+      }}
+    >
+      <div className="left-boxes">
+        <div className="heading">
+          <h1 className="day" style={{ textTransform: "uppercase" }}>
+            DAY {currentPage + 1}: {getDateForPage()}
+          </h1>
+          <button
+            className="editing-button"
+            type="button"
+            onClick={async () => {
+              if (editing) {
+                await saveItinerary();
+              }
+              setEditing((prev) => !prev);
+            }}
+            disabled={isGenerating}
+          >
+            {editing ? "SAVE" : "EDIT"}
+          </button>
+        </div>
+        {editing ? (
+          <div className="itinerary">
+            <div className="planning-boxes">
+              <div className="planning-box1">
+                <h2>Day Time</h2>
+                {renderPlanningInputs(currentDayBoxes, updateDayBoxes)}
+                <div className="editing-buttons">
+                  <button type="button" onClick={handleAddBoxDay}>
+                    <img src={add} alt="Add day activity" />
+                  </button>
+                  <button type="button" onClick={handleDeleteLastDayBox}>
+                    <img src={trash} alt="Remove day activity" />
+                  </button>
                 </div>
               </div>
-              <div className="bottom-buttons">
-                <button
-                  className="arrow"
-                  onClick={prevPage}
-                  disabled={currentPage === 0}
-                >
-                  <img src={lArrow} />
-                </button>
-                <button>GENERATE ME ONE</button>
-                <button
-                  className="arrow"
-                  onClick={nextPage}
-                  disabled={currentPage === tripLength - 1}
-                >
-                  <img src={rArrow} />
-                </button>
+              <div className="planning-box2">
+                <h2>Night Time</h2>
+                {renderPlanningInputs(currentNightBoxes, updateNightBoxes)}
+                <div className="editing-buttons">
+                  <button type="button" onClick={handleAddBoxNight}>
+                    <img src={add} alt="Add night activity" />
+                  </button>
+                  <button type="button" onClick={handleDeleteLastNightBox}>
+                    <img src={trash} alt="Remove night activity" />
+                  </button>
+                </div>
               </div>
             </div>
-          ) : (
-            <>
-              <div className="itinerary">
-                <div className="planning-boxes">
-                  <div className="planning-box1">
-                    <h2>Day Time</h2>
-                    <div>{generatedItinerary}</div>
-                    {currentDayBoxes.map((box, index) => (
-                      <div className="check-box-inputs" key={index}>
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={box.checked}
-                          onChange={(e) => {
-                            const newBoxes = [...currentDayBoxes];
-                            newBoxes[index].checked = e.target.checked;
-                            updateDayBoxes(newBoxes);
-                          }}
-                        />
-                        <input
-                          type="text"
-                          className="check-box-time"
-                          placeholder="Time..."
-                          value={box.time || ""}
-                          readOnly={!editing}
-                          onChange={(e) => {
-                            const newBoxes = [...currentDayBoxes];
-                            newBoxes[index].time = e.target.value;
-                            updateDayBoxes(newBoxes);
-                          }}
-                        />
-                        <input
-                          type="text"
-                          className="check-box-text"
-                          placeholder="Enter activity..."
-                          value={box.activity}
-                          readOnly={!editing}
-                          onChange={(e) => {
-                            const newBoxes = [...currentDayBoxes];
-                            newBoxes[index].activity = e.target.value;
-                            updateDayBoxes(newBoxes);
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="planning-box2">
-                    <h2>Night Time</h2>
-                    {currentNightBoxes.map((box, index) => (
-                      <div className="check-box-inputs" key={index}>
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={box.checked}
-                          onChange={(e) => {
-                            const newBoxes = [...currentNightBoxes];
-                            newBoxes[index].checked = e.target.checked;
-                            updateNightBoxes(newBoxes);
-                          }}
-                        />
-                        <input
-                          type="text"
-                          className="check-box-time"
-                          placeholder="Time..."
-                          value={box.time || ""}
-                          readOnly={!editing}
-                          onChange={(e) => {
-                            const newBoxes = [...currentNightBoxes];
-                            newBoxes[index].time = e.target.value;
-                            updateNightBoxes(newBoxes);
-                          }}
-                        />
-                        <input
-                          type="text"
-                          className="check-box-text"
-                          placeholder="Enter activity..."
-                          value={box.activity}
-                          readOnly={!editing}
-                          onChange={(e) => {
-                            const newBoxes = [...currentNightBoxes];
-                            newBoxes[index].activity = e.target.value;
-                            updateNightBoxes(newBoxes);
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="bottom-buttons">
-                  <button
-                    className="arrow"
-                    onClick={prevPage}
-                    disabled={currentPage === 0}
-                  >
-                    <img src={lArrow} />
-                  </button>
-                  <button onClick={handleGenerate}>GENERATE ME ONE</button>
-                  <button
-                    className="arrow"
-                    onClick={nextPage}
-                    disabled={currentPage === tripLength - 1}
-                  >
-                    <img src={rArrow} />
-                  </button>
-                </div>
+            {renderBottomButtons()}
+          </div>
+        ) : (
+          <div className="itinerary">
+            <div className="planning-boxes">
+              <div className="planning-box1">
+                <h2>Day Time</h2>
+                {renderPlanningInputs(currentDayBoxes, updateDayBoxes, true)}
               </div>
-            </>
-          )}
+              <div className="planning-box2">
+                <h2>Night Time</h2>
+                {renderPlanningInputs(currentNightBoxes, updateNightBoxes, true)}
+              </div>
+            </div>
+            {renderBottomButtons()}
+          </div>
+        )}
+      </div>
+      <div className="right-boxes">
+        <div className="map-box">
+          <img src={map} className="map" alt="Map preview" />
+          <button type="button" onClick={() => navigate("/itinerary-map")}>
+            View More
+          </button>
         </div>
-        <div className="right-boxes">
-          <div className="map-box">
-            <img src={map} className="map" />
-            <button onClick={() => navigate("/itinerary-map")}>
+        <div className="suggestions-box">
+          <h2>What You May Like</h2>
+          <div className="suggestion-preview">
+            <img
+              src={featuredSuggestion.image}
+              alt={featuredSuggestion.name}
+              className="suggestion-preview-image"
+            />
+            <p className="suggestion-preview-name">{featuredSuggestion.name}</p>
+          </div>
+          <div className="suggestions-bottom">
+            <button
+              className="plus"
+              type="button"
+              onClick={() =>
+                setSuggestionIndex((prev) => (prev + 1) % suggestions.length)
+              }
+            >
+              +
+            </button>
+            <button
+              className="view-more"
+              type="button"
+              onClick={() =>
+                setSuggestionIndex((prev) => (prev + 1) % suggestions.length)
+              }
+            >
               View More
             </button>
           </div>
-          <div className="suggestions-box">
-            <h2>What You May Like</h2>
-            <div className="suggestions-bottom">
-              <button className="plus">+</button>
-              <button className="view-more">View More</button>
-            </div>
-          </div>
         </div>
       </div>
-    );
-}
+    </div>
+  );
+};
 
 export default ItineraryPage;

@@ -41,6 +41,10 @@
     width: 70%;
     height: 95%;
     border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 0;
 }
 
 .three-boxes {
@@ -53,28 +57,48 @@
     display: flex;
     justify-content: center;
     gap: 40px;
+    padding: 0 34px;
+    box-sizing: border-box;
+    min-height: 0;
 }
 
 .planning-box1, .planning-box2 {
     background-color: rgba(255, 255, 255, 0.34);
-    height: 500px;
+    height: 420px;
     width: 400px;
+    max-width: 100%;
     border-radius: 40px;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between
+    justify-content: flex-start;
+    min-height: 0;
 }
 
 .planning-box1 h2, .planning-box2 h2 {
     font-family: 'Noto Sans Thai', serif;
     font-size: 25px;
     font-weight: 600;
-    justify-self: center;
+    width: 100%;
+    text-align: center;
+    margin: 24px 0 8px;
+}
+
+.itinerary {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+    padding-bottom: 22px;
+    box-sizing: border-box;
 }
 
 .bottom-buttons {
     display: flex;
     justify-content: center;
     gap: 30px;
+    margin-top: 24px;
+    flex-shrink: 0;
 }
 
 .bottom-buttons .arrow {
@@ -113,26 +137,40 @@
     box-shadow: 2px 4px 2px #394954ba;
 }
 
+.bottom-buttons button:disabled,
+.heading button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
 .right-boxes {
     width: 20%;
-    display: grid;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
 .map-box, .suggestions-box {
     background-color: rgba(255, 255, 255, 0.259);
     border-radius: 30px;
+    overflow: hidden;
 }
 
 .map-box {
-    height: 65%;
-    display: grid;
+    flex: 0 0 38%;
+    display: flex;
+    flex-direction: column;
     gap: 0;
 }
 
 .map {
-    justify-self: center;
-    height: 85%;
-    padding: 15px;
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    object-fit: cover;
+    padding: 15px 15px 10px;
 }
 
 .map-box button {
@@ -142,8 +180,8 @@
     border-radius: 25px;
     text-align: center;
     padding: 12px;
-    margin: 0px;
-    width: 100%;
+    margin: 0 15px 15px;
+    width: calc(100% - 30px);
     font-size: 25px;
     box-shadow: 2px 2px 2px #bcc5cd;
 }
@@ -154,21 +192,54 @@
 }
 
 .suggestions-box {
-    height: 165%;
-    display: grid;
-    margin-top: -170px
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 15px 15px;
 }
 
 .suggestions-box h2{
     text-align: center;
+    margin: 0 0 14px;
+    line-height: 1.1;
+}
+
+.suggestion-preview {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    min-height: 0;
+}
+
+.suggestion-preview-image {
+    width: 100%;
+    max-width: 220px;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: 2px 2px 8px rgba(62, 95, 111, 0.22);
+}
+
+.suggestion-preview-name {
+    color: #538BA4;
+    font-weight: 700;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+    line-height: 1.25;
+    padding: 0 12px;
 }
 
 .suggestions-bottom {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
-    align-content: flex-end;
-    margin: 15px;
+    margin: 14px 0 0;
 }
 
 
@@ -177,12 +248,14 @@
     background-color: #E8F5FB;
     border-radius: 50%;
     font-size: 40px;
-    height: 45px;
-    align-self: end;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 0;
     font-family: 'Noto Sans Thai', serif;
-    margin: 5px;
+    margin: 0;
     box-shadow: 2px 2px 2px #bcc5cd;
 }
 
@@ -196,7 +269,9 @@
     background-color: #E8F5FB;
     border-radius: 25px;
     height: 60px;
-    align-self: end;
+    min-width: 150px;
+    display: flex;
+    justify-content: center;
     align-items: center;
     font-size: 22px;
     padding: 10px 15px;
@@ -235,21 +310,21 @@
 .check-box-inputs {
   display: flex;
   align-items: center;
-  margin: 20px;
-  gap: 5px;
+  margin: 10px 18px;
+  gap: 2px;
 }
 
 .checkbox {
   cursor: pointer;
-  height: 25px;
-  margin:5%;
+  height: 22px;
+  margin: 0 6px 0 0;
 }
 
 .check-box-time {
   font-size: 14px;
   border: none;
   width: 80px;
-  padding: 10px;
+  padding: 6px 8px;
   font-weight: bold;
 }
 
@@ -257,7 +332,14 @@
   font-weight: bold;
   font-size: 16px;
   border: none;
-  padding: 10px;
+  padding: 6px 8px;
   font-size: 14px;
   width: 190px;
+}
+
+.generate-error {
+    color: #7b2535;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 18px;
 }

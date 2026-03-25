@@ -16,13 +16,15 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 18px 0 0;
+    box-sizing: border-box;
 }
 
 .right-nav {
     display: flex;
     flex-direction: row;
     gap: 35px;
-    margin: 0 35px;
+    margin: 0 24px 0 0;
 }
 
 .right-nav a {
@@ -52,15 +54,17 @@ body, html {
         display: none;
         position: absolute;
         top: 70px;
-        flex-direction: row;
+        right: 0;
+        flex-direction: column;
         background-color: #a9d3e2;
-        width: 100%;
-        padding: 20px 0;
+        width: min(220px, 100%);
+        padding: 16px 18px;
         align-items: center;
         margin: 0;
+        border-bottom-left-radius: 16px;
     }
 
-    .right-nav .open {
+    .right-nav.open {
         display: flex;
     }
 

@@ -18,29 +18,29 @@ import FAQ from './AccordionItem.jsx';
 import React, { useEffect, useState } from 'react';
 
 const LoggedInHomePage = () => {
-    const [username, setUsername] = useState('');
+    const [displayName, setDisplayName] = useState('');
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser) {
-        setUsername(storedUser.username);
+        setDisplayName(storedUser.name || storedUser.fullName || storedUser.username || '');
         }
   }, []);
     return (
-        <div className="homepage-wrapper">
+        <div className="homepage-wrapper logged-in-homepage-wrapper">
             <div className="second-navbar">
                 <a href="#home">HOME</a>
                 <a href="#about">ABOUT</a>
                 <a href="#faqs">FAQs</a>
             </div>
 
-            <div id="home" className='home-part'>
-                <div className='text-on-left'>
+            <div id="home" className='home-part logged-in-home-part'>
+                <div className='text-on-left logged-in-text-on-left'>
                     <div className='top-text-lp'>
                         <h2>WELCOME</h2>
                         <h2>BACK</h2>
                     </div>
-                    <h1 className='main-text-lp' style={{ textTransform: "uppercase "}}>{username}</h1>
+                    <h1 className='main-text-lp' style={{ textTransform: "uppercase "}}>{displayName}</h1>
                     <h3 className='descript-text-lp'>Let's Start Planning Your Trip</h3>
                 </div>
                 <div className='images'>

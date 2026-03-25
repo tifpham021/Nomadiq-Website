@@ -1,0 +1,608 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Noto+Sans+Thai:wght@400;500;700&display=swap");
+
+.outfit-suggestions-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  min-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
+  padding: 70px 0 0;
+  background:
+    radial-gradient(circle at 14% 24%, rgba(157, 186, 245, 0.5), transparent 18%),
+    radial-gradient(circle at 68% 18%, rgba(96, 211, 242, 0.32), transparent 24%),
+    radial-gradient(circle at 76% 74%, rgba(130, 198, 241, 0.24), transparent 22%),
+    linear-gradient(180deg, #bde0f4 0%, #83c8ef 52%, #a9d9ee 100%);
+}
+
+.outfit-suggestions-shell {
+  min-height: calc(100vh - 70px);
+  min-height: calc(100dvh - 70px);
+  width: min(1380px, calc(100vw - 48px));
+  margin: 0 auto;
+  padding: 18px 0 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.outfit-page-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.outfit-saved-pill {
+  position: relative;
+  width: 86px;
+  height: 60px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(219, 241, 251, 0.88);
+  box-shadow: 0 8px 16px rgba(75, 109, 131, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.outfit-saved-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 18px rgba(75, 109, 131, 0.22);
+}
+
+.outfit-saved-heart {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+.outfit-saved-count {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  padding: 0 6px;
+  background: #ef4a47;
+  color: #fff;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outfit-heading-block {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.outfit-heading-block h1 {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(42px, 4.3vw, 66px);
+  font-weight: 700;
+  line-height: 0.96;
+  color: #071018;
+}
+
+.outfit-heading-block p {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(11, 26, 38, 0.76);
+}
+
+.outfit-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.outfit-filter-control {
+  min-width: 190px;
+  display: grid;
+  gap: 8px;
+}
+
+.outfit-filter-control span {
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(8, 21, 32, 0.72);
+}
+
+.outfit-select-shell {
+  position: relative;
+  min-height: 58px;
+  border-radius: 999px;
+  background: rgba(222, 243, 251, 0.78);
+  box-shadow: 0 8px 16px rgba(75, 109, 131, 0.14);
+  overflow: hidden;
+}
+
+.outfit-select-shell select {
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0 56px 0 26px;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #09131b;
+  cursor: pointer;
+}
+
+.outfit-select-shell select:focus {
+  outline: none;
+}
+
+.outfit-select-shell img {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.outfit-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.outfit-card {
+  min-height: 620px;
+  border-radius: 36px;
+  padding: 26px 22px 22px;
+  box-sizing: border-box;
+  background: rgba(223, 241, 250, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 14px 24px rgba(74, 108, 130, 0.18);
+  display: grid;
+  grid-template-rows: auto 292px 158px auto;
+  gap: 16px;
+}
+
+.outfit-card h2 {
+  margin: 0;
+  text-align: center;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(28px, 2.6vw, 42px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #071017;
+}
+
+.outfit-visual {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  align-items: center;
+}
+
+.outfit-arrow-button {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(231, 245, 251, 0.82);
+  box-shadow: 0 8px 14px rgba(88, 119, 140, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.outfit-arrow-button img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%);
+}
+
+.outfit-arrow-button--left {
+  left: -8px;
+}
+
+.outfit-arrow-button--right {
+  right: -8px;
+}
+
+.outfit-arrow-button:hover {
+  transform: translateY(-50%) scale(1.04);
+  background: rgba(245, 251, 255, 0.94);
+  box-shadow: 0 12px 18px rgba(88, 119, 140, 0.22);
+}
+
+.outfit-arrow-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+.outfit-token-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-content: stretch;
+  align-items: stretch;
+  justify-items: center;
+  padding: 8px 56px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.outfit-token {
+  position: relative;
+  width: min(100%, 150px);
+  min-height: 0;
+  height: 100%;
+  border-radius: 28px;
+  padding: 16px 14px;
+  box-sizing: border-box;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 6px;
+  text-align: center;
+  box-shadow: 0 12px 18px rgba(92, 120, 141, 0.16);
+  pointer-events: none;
+}
+
+.outfit-token-icon {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.outfit-token-image {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  display: block;
+}
+
+.outfit-token-label {
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #152331;
+}
+
+.outfit-token--1 {
+  top: auto;
+  left: auto;
+  transform: none;
+}
+
+.outfit-token--2 {
+  top: auto;
+  right: auto;
+  transform: none;
+}
+
+.outfit-token--3 {
+  bottom: auto;
+  left: auto;
+  transform: none;
+}
+
+.outfit-token--4 {
+  bottom: auto;
+  right: auto;
+  transform: none;
+}
+
+.outfit-tone-0 {
+  background: rgba(255, 194, 200, 0.92);
+}
+
+.outfit-tone-1 {
+  background: rgba(193, 224, 255, 0.9);
+}
+
+.outfit-tone-2 {
+  background: rgba(255, 231, 170, 0.92);
+}
+
+.outfit-tone-3 {
+  background: rgba(210, 199, 255, 0.9);
+}
+
+.outfit-card-copy {
+  display: grid;
+  grid-template-rows: auto minmax(42px, auto) minmax(62px, 1fr);
+  align-content: start;
+  gap: 10px;
+  min-height: 158px;
+}
+
+.outfit-title {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #08131c;
+}
+
+.outfit-summary {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(13, 26, 37, 0.72);
+  min-height: 42px;
+}
+
+.outfit-piece-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 8px;
+  min-height: 62px;
+}
+
+.outfit-piece-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0e1b25;
+}
+
+.outfit-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.outfit-heart-button {
+  width: 68px;
+  height: 58px;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 10px 14px rgba(78, 109, 130, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.outfit-heart-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+.outfit-heart-button.is-active {
+  background: #ffe3e2;
+}
+
+.outfit-add-button {
+  min-width: 210px;
+  min-height: 58px;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 10px 14px rgba(78, 109, 130, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  color: #101922;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.outfit-add-button.is-saved {
+  background: #e5f5ea;
+  color: #22684b;
+}
+
+.outfit-heart-button:hover,
+.outfit-add-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 18px rgba(78, 109, 130, 0.22);
+}
+
+.outfit-heart-button:active,
+.outfit-add-button:active {
+  transform: translateY(1px);
+}
+
+.outfit-heart-button:focus-visible,
+.outfit-add-button:focus-visible,
+.outfit-saved-pill:focus-visible,
+.outfit-arrow-button:focus-visible,
+.outfit-select-shell select:focus-visible {
+  outline: 3px solid rgba(92, 147, 185, 0.68);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1260px) {
+  .outfit-page-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .outfit-filter-row {
+    justify-content: center;
+  }
+
+  .outfit-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .outfit-suggestions-shell {
+    width: min(100%, calc(100vw - 32px));
+    gap: 20px;
+  }
+
+  .outfit-filter-row {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .outfit-filter-control {
+    min-width: 0;
+    flex: 1 1 180px;
+  }
+
+  .outfit-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .outfit-card {
+    min-height: 0;
+    grid-template-rows: auto 292px auto auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .outfit-suggestions-shell {
+    padding-top: 14px;
+  }
+
+  .outfit-heading-block h1 {
+    font-size: clamp(34px, 11vw, 48px);
+  }
+
+  .outfit-heading-block p {
+    font-size: 15px;
+  }
+
+  .outfit-filter-row {
+    flex-direction: column;
+  }
+
+  .outfit-filter-control {
+    width: 100%;
+  }
+
+  .outfit-select-shell {
+    min-height: 54px;
+  }
+
+  .outfit-select-shell select {
+    font-size: 18px;
+  }
+
+  .outfit-card {
+    padding: 22px 18px 18px;
+    grid-template-rows: auto 1fr auto auto;
+  }
+
+  .outfit-card h2 {
+    font-size: 28px;
+  }
+
+  .outfit-visual {
+    min-height: 234px;
+    height: auto;
+  }
+
+  .outfit-arrow-button {
+    width: 52px;
+    height: 52px;
+  }
+
+  .outfit-token-stage {
+    gap: 12px;
+    padding: 6px 48px;
+    height: auto;
+  }
+
+  .outfit-token {
+    width: min(100%, 124px);
+    min-height: 94px;
+    height: auto;
+    padding: 14px 10px;
+  }
+
+  .outfit-token-icon {
+    font-size: 28px;
+  }
+
+  .outfit-token-image {
+    width: 56px;
+    height: 56px;
+  }
+
+  .outfit-token-label {
+    font-size: 12px;
+  }
+
+  .outfit-add-button {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .outfit-card-copy {
+    min-height: 0;
+    grid-template-rows: auto auto auto;
+  }
+
+  .outfit-summary,
+  .outfit-piece-pills {
+    min-height: 0;
+  }
+}

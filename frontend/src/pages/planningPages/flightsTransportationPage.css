@@ -1,0 +1,498 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Noto+Sans+Thai:wght@400;500;700&display=swap");
+
+.flights-transportation-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  min-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
+  padding: 70px 0 0;
+  background:
+    radial-gradient(circle at 16% 26%, rgba(131, 180, 247, 0.42), transparent 19%),
+    radial-gradient(circle at 74% 20%, rgba(116, 222, 248, 0.28), transparent 24%),
+    radial-gradient(circle at 82% 72%, rgba(153, 200, 246, 0.2), transparent 18%),
+    linear-gradient(180deg, #bbe0f4 0%, #7dc9ef 52%, #b8deef 100%);
+}
+
+.flights-transportation-shell {
+  min-height: calc(100vh - 70px);
+  min-height: calc(100dvh - 70px);
+  width: min(1260px, calc(100vw - 42px));
+  margin: 0 auto;
+  padding: 58px 0 22px;
+  box-sizing: border-box;
+}
+
+.transport-booking-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.transport-booking-card {
+  height: 100%;
+  border-radius: 20px;
+  padding: 16px 22px 18px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(223, 242, 251, 0.84) 0%, rgba(216, 236, 248, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 18px 30px rgba(79, 112, 132, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.flight-booking-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.transport-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.booking-status-row {
+  display: grid;
+  gap: 6px;
+}
+
+.booking-status-row p {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: rgba(10, 23, 34, 0.66);
+}
+
+.booking-status-chip {
+  justify-self: start;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.booking-status-chip.saved {
+  background: rgba(113, 216, 164, 0.24);
+  color: #156641;
+}
+
+.booking-status-chip.sample {
+  background: rgba(255, 211, 124, 0.28);
+  color: #8a5d05;
+}
+
+.airline-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.airline-logo-badge {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(154, 205, 246, 0.92) 0%, rgba(133, 193, 244, 0.92) 100%);
+  box-shadow:
+    inset 0 0 0 10px rgba(205, 231, 250, 0.64),
+    0 10px 18px rgba(86, 116, 135, 0.14);
+  display: grid;
+  place-items: center;
+}
+
+.airline-logo-badge.has-brand {
+  width: 126px;
+  height: 90px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.airline-logo-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  transform: rotate(-20deg);
+}
+
+.airline-logo-image--brand {
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+
+.airline-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.airline-copy h1 {
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #070f16;
+}
+
+.airline-copy span {
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(10, 23, 34, 0.76);
+}
+
+.flight-route-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-airport-column {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.booking-airport-column h2 {
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(38px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 0.92;
+  color: #09121a;
+}
+
+.booking-airport-column p {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(9, 18, 26, 0.88);
+}
+
+.booking-route-connector {
+  min-width: 136px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-route-line {
+  position: relative;
+  top: -2px;
+  margin-right: 4px;
+  height: 0;
+  border-top: 2px solid rgba(13, 24, 33, 0.9);
+  background: transparent;
+}
+
+.booking-route-plane-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  transform: rotate(45deg);
+}
+
+.flight-date-label {
+  margin: 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+  color: #0a141d;
+}
+
+.booking-divider {
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.flight-duration {
+  margin: 8px 0 0;
+  text-align: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(18px, 1.9vw, 24px);
+  font-weight: 500;
+  color: #0a131b;
+}
+
+.flight-duration strong,
+.flight-times-row strong {
+  font-weight: 700;
+}
+
+.flight-times-row {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.flight-times-row p {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(17px, 1.7vw, 22px);
+  font-weight: 500;
+  color: #0a131b;
+}
+
+.booking-primary-button {
+  margin-top: auto;
+  justify-self: center;
+  min-width: 192px;
+  min-height: 54px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 10px 18px rgba(81, 109, 129, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0a131b;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.booking-primary-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 22px rgba(81, 109, 129, 0.22);
+}
+
+.booking-primary-button:active {
+  transform: translateY(0);
+}
+
+.transport-icon-wrap {
+  display: grid;
+  justify-items: center;
+}
+
+.transport-icon-ring {
+  width: 126px;
+  height: 126px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(143, 204, 247, 0.94) 0%, rgba(121, 191, 242, 0.96) 100%);
+  box-shadow:
+    inset 0 0 0 10px rgba(211, 236, 251, 0.64),
+    0 12px 20px rgba(82, 115, 135, 0.14);
+  display: grid;
+  place-items: center;
+}
+
+.transport-icon-image {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+}
+
+.transport-detail-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.transport-detail-column {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  text-align: center;
+}
+
+.transport-detail-column h2 {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(20px, 1.9vw, 28px);
+  font-weight: 700;
+  color: #08131b;
+}
+
+.transport-detail-column p,
+.transport-detail-column span {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(9, 18, 26, 0.9);
+}
+
+.transport-detail-column strong {
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(23px, 2.2vw, 32px);
+  font-weight: 700;
+  line-height: 0.95;
+  color: #09131b;
+}
+
+.transport-detail-divider {
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.transport-mode-title {
+  margin: 0;
+  text-align: center;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(23px, 2.2vw, 32px);
+  font-weight: 700;
+  line-height: 0.94;
+  color: #08121a;
+}
+
+.transport-vehicle-display {
+  min-height: 72px;
+  display: grid;
+  place-items: center;
+}
+
+.transport-vehicle-image {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+
+.transport-provider-row {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.transport-provider-badge {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0b6a37 0%, #0b4e2a 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Archivo", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.transport-provider-badge.has-logo {
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.transport-provider-brand {
+  display: block;
+  width: auto;
+  height: 72px;
+  object-fit: contain;
+}
+
+.transport-provider-row p {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 700;
+  color: #0a131b;
+}
+
+@media (max-width: 1100px) {
+  .flights-transportation-shell {
+    width: min(960px, calc(100vw - 36px));
+    padding-top: 56px;
+    padding-bottom: 22px;
+  }
+
+  .transport-booking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transport-booking-card {
+    max-width: 780px;
+    width: 100%;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .flights-transportation-shell {
+    width: min(100vw - 24px, 760px);
+    padding-top: 72px;
+    padding-bottom: 28px;
+  }
+
+  .transport-booking-grid {
+    gap: 24px;
+  }
+
+  .transport-booking-card {
+    border-radius: 26px;
+    padding: 20px 20px 24px;
+  }
+
+  .airline-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .flight-route-row,
+  .transport-detail-split {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-route-connector {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .booking-route-plane-icon {
+    transform: rotate(82deg);
+  }
+
+  .booking-route-line {
+    top: 0;
+    margin-right: 0;
+  }
+
+  .transport-detail-divider {
+    width: 100%;
+    height: 3px;
+  }
+
+  .transport-provider-row {
+    flex-direction: column;
+  }
+
+  .booking-primary-button {
+    width: 100%;
+    min-width: 0;
+  }
+}

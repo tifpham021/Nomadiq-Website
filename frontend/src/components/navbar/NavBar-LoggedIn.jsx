@@ -1,6 +1,6 @@
 import earthIcon from '../../assets/home-img/earth-icon.png';
 import '../navbar/navbarLoggedIn.css';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import downArrow from '../../assets/home-img/down-arrow.png';
 import upArrow from '../../assets/home-img/up-arrow.png';
 import pin from '../../assets/home-img/nb-pin.png';
@@ -17,7 +17,7 @@ import user from '../../assets/home-img/nb-user.png';
 import exit from '../../assets/home-img/nb-running.png';
 import { useNavigate } from 'react-router-dom';
 
-function NavbarLoggedIn({header, elements, isOpen, onToggle}) {
+function NavbarLoggedIn({header, elements, isOpen, onToggle, onItemClick}) {
     return (
         <div className='navbar-item'>
             <div className='nav-header' onClick={onToggle}>      
@@ -30,7 +30,10 @@ function NavbarLoggedIn({header, elements, isOpen, onToggle}) {
                         <a key={index} 
                         href={item.navigate ? `/${item.navigate}` : '#'} 
                         className={`dropdown dropdown-${item.iconClass}`}
-                        onClick={item.onClick}>
+                        onClick={(event) => {
+                            item.onClick?.(event);
+                            onItemClick?.();
+                        }}>
                             <img src={item.icon} draggable="false" className={`dropdown-icon ${item.iconClass}`}/>
                             <p>{item.label}</p>
                         </a>
@@ -45,6 +48,7 @@ export default function LoggedInNav({setUser}) {
     const [openDropdown, setOpenDropdown] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const navRef = useRef(null);
 
     const handleLogout = () => {
         localStorage.removeItem("user");
@@ -56,9 +60,29 @@ export default function LoggedInNav({setUser}) {
         setOpenDropdown((prev) => (prev === header ? null : header));
     };
 
+    useEffect(() => {
+        const handlePointerDown = (event) => {
+            if (!navRef.current?.contains(event.target)) {
+                setOpenDropdown(null);
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handlePointerDown);
+
+        return () => {
+            document.removeEventListener("mousedown", handlePointerDown);
+        };
+    }, []);
+
+    const handleDropdownItemClick = () => {
+        setOpenDropdown(null);
+        setMenuOpen(false);
+    };
+
     return (
-        <nav className='navbar-login'>
-            <a href={"/"}>
+        <nav className='navbar-login' ref={navRef}>
+            <a href={"/logged-in-home-page"}>
                 <img src={earthIcon} draggable="false" alt="earth-icon" className="earth-icon"/>
             </a>
             <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
@@ -73,10 +97,11 @@ export default function LoggedInNav({setUser}) {
                         {label:"Check the Weather", icon: cloud, iconClass: "cloud", navigate:"weather"},
                         {label:"Plan your Itinerary", icon: checklist, iconClass: "checklist", navigate:"plan-itinerary"},
                         {label:"Track your Flight", icon: plane, iconClass: "plane", navigate:"track-flight"} ,
-                        {label:"Learn more", icon: map, iconClass: "map", navigate:"learn-more"}
+                        {label:"Learn more", icon: map, iconClass: "nav-map", navigate:"learn-more"}
                     ]}
                     isOpen={openDropdown === "Plan"}
                     onToggle={() => handleToggle("Plan")}
+                    onItemClick={handleDropdownItemClick}
                 />
                 <NavbarLoggedIn
                     header="Pack"
@@ -86,6 +111,7 @@ export default function LoggedInNav({setUser}) {
                     ]}
                     isOpen={openDropdown === "Pack"}
                     onToggle={() => handleToggle("Pack")}
+                    onItemClick={handleDropdownItemClick}
                 />
                 <NavbarLoggedIn
                     header="Bookings"
@@ -96,6 +122,7 @@ export default function LoggedInNav({setUser}) {
                         ]}
                     isOpen={openDropdown === "Bookings"}
                     onToggle={() => handleToggle("Bookings")}
+                    onItemClick={handleDropdownItemClick}
                 />
                 <NavbarLoggedIn
                     header="Profile"
@@ -105,6 +132,7 @@ export default function LoggedInNav({setUser}) {
                         ]}
                     isOpen={openDropdown === "Profile"}
                     onToggle={() => handleToggle("Profile")}
+                    onItemClick={handleDropdownItemClick}
                 />
             </div>
         </nav>

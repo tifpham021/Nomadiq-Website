@@ -126,10 +126,10 @@ body, html {
     height: 35px;
 }
 
-.dropdown-map img{
+.dropdown-nav-map img{
     width: 35px;
     height: 40px;
-    margin-left: -8px;
+    margin-left: 2px;
 }
 
 .dropdown-suitcase {
@@ -266,7 +266,7 @@ body, html {
     }
 
     .dropdown-pin, .dropdown-cloud, .dropdown-checklist, .dropdown-plane,
-    .dropdown-map, .dropdown-suitcase, .dropdown-shirt, .dropdown-takeoff,
+    .dropdown-nav-map, .dropdown-suitcase, .dropdown-shirt, .dropdown-takeoff,
     .dropdown-building, .dropdown-mic, .dropdown-user, .dropdown-logout {
         display: flex;
         justify-content: center;
