@@ -35,6 +35,7 @@ import {
   PACKING_CATEGORIES,
   PACKING_LIST_STORAGE_KEY,
 } from "./packingListData.js";
+import { apiUrl } from "../../utils/api.js";
 
 const FILTERS_KEY = "outfit-suggestion-filters-v1";
 const FAVORITES_KEY = "outfit-suggestion-favorites-v1";
@@ -1338,7 +1339,7 @@ const OutfitSuggestionsPage = () => {
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/weather?city=${encodeURIComponent(tripInfo.city)}`
+          apiUrl(`/api/weather?city=${encodeURIComponent(tripInfo.city)}`)
         );
 
         if (!response.ok) {

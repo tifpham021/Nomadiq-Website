@@ -14,6 +14,14 @@ import OpenAI from "openai";
 
 dotenv.config();
 
+const DEFAULT_FRONTEND_URL = "http://localhost:5173";
+const allowedOrigins = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const primaryFrontendUrl = allowedOrigins[0] || DEFAULT_FRONTEND_URL;
+const port = process.env.PORT || 3000;
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -24,11 +32,18 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // your frontend origin
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
   })
 );
 
-const apiKey = process.env.VITE_WEATHER_API_KEY;
+const apiKey = process.env.WEATHER_API_KEY || process.env.VITE_WEATHER_API_KEY;
 const days = 5;
 
 const formatDestination = ({ city, state, country }) =>
@@ -263,7 +278,7 @@ app.post("/api/resetting-pass-email", async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // Return reset URL to frontend
-    const resetUrl = `http://localhost:5173/resetting-pass/${resetToken}`;
+    const resetUrl = `${primaryFrontendUrl}/resetting-pass/${resetToken}`;
 
     await resend.emails.send({
       from: "Nomadiq <onboarding@resend.dev>", // or use your verified domain
@@ -535,6 +550,6 @@ Rules:
 
 connectDB();
 
-app.listen(3000, () => {
-  console.log("Server started at http://localhost:3000");
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });

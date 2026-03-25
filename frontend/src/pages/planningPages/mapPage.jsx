@@ -4,8 +4,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import { useNavigate } from 'react-router-dom';
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoidGlmMDIxIiwiYSI6ImNtZG1rMHM1OTFtYTMybnB1Nmw5a3k4eXUifQ.i-YIqbLH2ZZj00uz6oa4gw";
+const mapboxToken = import.meta.env.VITE_MAPBOX_API_KEY || "";
+mapboxgl.accessToken = mapboxToken;
 
 const MapPage = ({itinerary}) => {
     const mapContainer = useRef(null);
@@ -37,7 +37,7 @@ const MapPage = ({itinerary}) => {
     };
 
   useEffect(() => {
-    if (!location) return;
+    if (!location || !mapboxToken) return;
     getCoordinates(location)
       .then(({ lat, lng }) => {
         map.current = new mapboxgl.Map({

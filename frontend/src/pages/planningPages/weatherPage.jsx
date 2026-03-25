@@ -8,6 +8,7 @@ import wind from'../../assets/planning-img/wind.png';
 import lArrow from'../../assets/planning-img/left-arrow.png';
 import rArrow from'../../assets/planning-img/right-arrow.png';
 import { useEffect, useState } from 'react';
+import { apiUrl } from '../../utils/api.js';
 
 const WeatherPage = () => {
 
@@ -28,7 +29,7 @@ const WeatherPage = () => {
     const fetchWeather = async (city) => {
         try {
             const res = await fetch(
-              `http://localhost:3000/api/weather?city=${encodeURIComponent(city)}`
+              apiUrl(`/api/weather?city=${encodeURIComponent(city)}`)
             );
             const data = await res.json();
             setForecast(data);

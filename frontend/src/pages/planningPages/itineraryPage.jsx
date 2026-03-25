@@ -8,6 +8,7 @@ import trash from "../../assets/planning-img/trash.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDestinationSuggestions } from "./destinationSuggestions.js";
+import { apiUrl } from "../../utils/api.js";
 
 const MAX_BOXES = 4;
 
@@ -161,7 +162,7 @@ const ItineraryPage = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/plan-itinerary?userId=${userId}&date=${date}`
+        apiUrl(`/api/plan-itinerary?userId=${userId}&date=${date}`)
       );
 
       if (!res.ok) {
@@ -213,7 +214,7 @@ const ItineraryPage = () => {
         nightBoxes: sanitizedNightBoxes,
       };
 
-      await fetch("http://localhost:3000/api/plan-itinerary", {
+      await fetch(apiUrl("/api/plan-itinerary"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +293,7 @@ const ItineraryPage = () => {
     setGenerateError("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/generate-itinerary", {
+      const res = await fetch(apiUrl("/api/generate-itinerary"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

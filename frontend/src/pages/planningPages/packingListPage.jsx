@@ -8,6 +8,7 @@ import windImage from "../../assets/packing-img/wind_1164960 1.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PACKING_CATEGORIES } from "./packingListData.js";
+import { apiUrl } from "../../utils/api.js";
 
 const DEFAULT_WEATHER = {
   description: "Mostly sunny with occasional clouds",
@@ -147,7 +148,7 @@ const PackingListPage = () => {
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/weather?city=${encodeURIComponent(city)}`
+          apiUrl(`/api/weather?city=${encodeURIComponent(city)}`)
         );
 
         if (!response.ok) {
