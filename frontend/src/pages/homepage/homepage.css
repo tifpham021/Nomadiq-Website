@@ -333,32 +333,37 @@ body {
 @media (max-width: 1024px) {
   .home-part {
     flex-wrap: wrap;
-    gap: 36px;
+    justify-content: center;
+    gap: 24px;
   }
 
   .main-text {
     font-size: 4.5rem;
-  }
-
-  .descript-text {
-    font-size: 1.6rem;
-  }
-
-  .images {
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-left: 0;
-    margin-right: 0;
-    justify-content: center;
-  }
-
-  .text-on-left {
-    margin-left: 0;
-    padding-left: 0;
     text-align: center;
   }
 
   .descript-text {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .images {
+    display: none;
+  }
+
+  .text-on-left {
+    max-width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    padding-left: 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .top-text,
+  .main-text,
+  .descript-text {
+    justify-content: center;
     text-align: center;
   }
 
